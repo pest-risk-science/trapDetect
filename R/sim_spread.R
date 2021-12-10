@@ -160,7 +160,6 @@ sim_spread <- function(init_dat=NULL, N_seed=2, rand.walk=FALSE,
                                                          sdm=sdm0)))
     }
     row.names(dat) <- NULL
-
     # Update plot
     if(PLOT.IT) {
       plot(sdm)
