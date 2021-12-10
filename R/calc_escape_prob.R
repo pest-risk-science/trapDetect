@@ -13,6 +13,10 @@ NULL
 
 #' @import raster
 
+
+#' @import raster
+
+
 #' @export
 calc_escape_prob <- function(init_dat=NULL,
                              surv_locs=NULL,
