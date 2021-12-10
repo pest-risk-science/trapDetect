@@ -9,6 +9,8 @@ NULL
 
 #' @importFrom fields rdist
 
+#' @importFrom graphics plot
+
 #' @export
 calc_escape_prob <- function(init_dat=NULL,
                              surv_locs=NULL,
