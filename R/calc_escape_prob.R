@@ -10,8 +10,15 @@ NULL
 #' @importFrom fields rdist
 
 #' @importFrom graphics plot
+<<<<<<< HEAD
 
 #' @import raster
+=======
+<<<<<<< HEAD
+#' @import raster
+=======
+>>>>>>> f3ccde10270a8baf072c6bb320a64004297dcd20
+>>>>>>> fd01f56457b5c57fc1a421a5b070cd465a247e5e
 
 #' @export
 calc_escape_prob <- function(init_dat=NULL,
