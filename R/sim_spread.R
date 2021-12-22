@@ -16,7 +16,6 @@ sim_spread <- function(init_dat=NULL, N_seed=2, rand.walk=FALSE,
                       cell_res=10, sdm=NULL, sdm_og=0, p_alpha=1,
                       p_beta=1, allow_leave=FALSE, crw=FALSE,
                       sigma=NULL, theta=NULL, random_length=FALSE,
-                      attractive_areas=FALSE, survive_prob=FALSE,
                       PLOT.IT=TRUE, ...) {
 
 
@@ -87,11 +86,10 @@ sim_spread <- function(init_dat=NULL, N_seed=2, rand.walk=FALSE,
   dat$dens <- raster::extract(dens,dat[,c("x","y")])
 
   # Apply survival/mortality based on sdm values
-  if(survive_prob) {
-    dat[,"Fate"] <- rbinom(nrow(dat),1,dat$sdm)
-    # Choose survivors
-    dat <- dat[dat$Fate==1,]
-  }
+  dat[,"Fate"] <- rbinom(nrow(dat),1,dat$sdm)
+
+  # Choose survivors
+  dat <- dat[dat$Fate==1,]
 
   # List for populating
   dat_all <- list()
@@ -142,18 +140,16 @@ sim_spread <- function(init_dat=NULL, N_seed=2, rand.walk=FALSE,
     dat$dens[is.na(dat$dens)] <- 0
 
     # Apply mortality based on sdm
-    if(survive_prob) {
-      dat[,"Fate"] <- rbinom(nrow(dat),1,dat$sdm)
+    dat[,"Fate"] <- rbinom(nrow(dat),1,dat$sdm)
 
-      # Choose survivors
-      dat <- dat[dat$Fate==1,]
-    }
+    # Choose survivors
+    dat <- dat[dat$Fate==1,]
 
     # Update survivor age
     dat$Age <- dat$Age+1
 
     # Undertake random walk if required
-    if(rand.walk) {
+    if(rand.walk & nrow(dat)>0) {
        dat[,c("x","y")] <- t(apply(dat[,c("x","y")], 1,
                                    function(x) rand_walk(x=x[1],
                                                          y=x[2],
@@ -161,8 +157,7 @@ sim_spread <- function(init_dat=NULL, N_seed=2, rand.walk=FALSE,
                                                          sigma=sigma0,
                                                          theta=theta0,
                                                          random_length=random_length,
-                                                         sdm=sdm0,
-                                                         attractive_areas=attractive_areas)))
+                                                         sdm=sdm0)))
     }
     row.names(dat) <- NULL
     # Update plot
