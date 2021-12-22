@@ -12,7 +12,8 @@
 
 #' @export
 rand_walk <- function(x=0,y=0,step_size=1,sigma=NULL,theta=NULL,
-                      random_length=FALSE, sdm=NULL) {
+                      random_length=FALSE, sdm=NULL,
+                      attractive_areas=TRUE) {
 
   # Check to see if original point in raster
   if(!is.null(sdm)) {
@@ -41,11 +42,20 @@ rand_walk <- function(x=0,y=0,step_size=1,sigma=NULL,theta=NULL,
     return(new_loc)
   } else {
     outside_raster <- is.na(sum(extract(sdm,matrix(new_loc,1,2))))
-    if(outside_raster) {
-      return(rand_walk(x,y,step_size,sigma,theta,random_length,sdm))
+    worse_loc <- FALSE
+    if(attractive_areas) {
+      old_loc_value <- sum(extract(sdm,matrix(org_loc,1,2)),na.rm=TRUE)
+      new_loc_value <- sum(extract(sdm,matrix(new_loc,1,2)),na.rm=TRUE)
+      worse_loc <- old_loc_value > new_loc_value
+    }
+    if(outside_raster | worse_loc) {
+      return(rand_walk(x,y,step_size,sigma,theta,random_length,sdm,
+                       attractive_areas))
     } else {
       return(new_loc)
     }
+
+
   }
 }
 
