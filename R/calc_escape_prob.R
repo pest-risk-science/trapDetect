@@ -43,7 +43,9 @@ calc_escape_prob <- function(init_dat=NULL,
                              sig = 1,
                              det_func="Manouk",
                              use_manouk_error=FALSE,
-                             run_surveil=FALSE, ...) {
+                             run_surveil=FALSE,
+                             return_sim=FALSE,
+                             return_all_prob=FALSE,...) {
   # Calls:
   ###	p_detect_one()
   # Args:
@@ -120,5 +122,19 @@ calc_escape_prob <- function(init_dat=NULL,
 
   # Calculate means over simulations
   res_sum <- apply(res,2,mean)
-  res_sum
+
+  # Return
+  return_list <- list()
+  return_list$mean_prob = res_sum
+
+  if(return_all_prob) {
+    return_list$probs = res
+  }
+
+  if(return_sim) {
+    return_list$sim = sim
+  }
+
+  return(return_list)
+
 }
