@@ -46,6 +46,8 @@ calc_escape_prob <- function(init_dat=NULL,
                              run_surveil=FALSE,
                              return_sim=FALSE,
                              return_all_prob=FALSE,...) {
+
+
   # Calls:
   ###	p_detect_one()
   # Args:
@@ -124,6 +126,7 @@ calc_escape_prob <- function(init_dat=NULL,
   res_sum <- apply(res,2,mean)
 
   # Return
+
   return_list <- list()
   return_list$mean_prob = res_sum
 
@@ -136,5 +139,6 @@ calc_escape_prob <- function(init_dat=NULL,
   }
 
   return(return_list)
+
 
 }
