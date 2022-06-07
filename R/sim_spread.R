@@ -1,5 +1,5 @@
 
-#' @description Simulates spread of
+#' @description This functin simulates the spread in an sdm.
 #'
 #' @param init_dat data frame object containing columns named x, y, Fate, and
 #'   Age of the initial locations of the population to simulate a spread. If
@@ -10,6 +10,7 @@
 #'   process.
 #' @param step_size_os step size for dispersal distances of offspring.
 #' @param step_size_ad step size for dispersal distances of adults.
+#' @param Time the number of time steps for the simulation.
 #' @param K number for the carrying capacity of cells in the raster.
 #' @param age_mu parameter to randomly assign initial ages.
 #' @param offspr_mu parameter passed to `gen_offpring()` indicating the mean
@@ -35,40 +36,19 @@
 #'   enter area as defined by raster values.
 #' @param survive_prob logical. If `TRUE` allow for survival/mortality based on
 #'   sdm values.
-#' @param PLOT.IT logical. If `TRUE` plot an amm
+#' @param PLOT.IT logical. If `TRUE` plot an animation of the spread simulation.
+#'   Not recommended for large or long simulations.
 #' @param ... additional arguments to be passed to helper functions.
 #'
 #' @export
 sim_spread <- function(init_dat=NULL, N_seed=2, rand.walk=FALSE,
-                      step_size_os=100, step_size_ad=50, T=10, K=1000,
+                      step_size_os=100, step_size_ad=50, Time=10, K=1000,
                       age_mu=1, offspr_mu=1, bbox=c(0,0,1608,1608),
                       cell_res=10, sdm=NULL, sdm_og=0, p_alpha=1,
                       p_beta=1, allow_leave=FALSE, crw=FALSE,
                       sigma=NULL, theta=NULL, random_length=FALSE,
                       attractive_areas=FALSE, survive_prob=FALSE,
                       PLOT.IT=TRUE, ...) {
-
-  ###	PLOT.IT -- do you want to plot
-
-  # Args:
-  ###	init_dat -- data.frame contain x, y, Fate and Age of population to be updated
-  ###	N_seed -- number of individuals to start with if init_dat not given
-  ### rand.walk -- are individuals fixed, or do they move each time step
-  ###	step_size_os -- step size for dispersal distances of offspring
-  ###	step_size_ad -- step size for dispersal distances of adults
-  ###	T -- number of time steps to run simulation for
-  ###	K -- carrying capacity for cells
-  ###	age_mu -- parameter for randomly assigning initial ages
-  ### offspr_mu - parameter for offspring mean
-  ###	bbox -- extent (used for plotting)
-  ###	cell_res -- resolution of raster (for calculating K etc.)
-  ###	sdm -- a sdm on a raster (values need to on [0,1])
-  ###	sdm_og -- values to use for sdm off the grid (if zero, all die)
-  ###	p_alpha, p_beta -- beta parameters governing survival probability (THESE ARE NOT IN)
-  ### allow_leave -- are individuals allowed to leave the raster?
-  ### crw -- use correlated random walk or no?
-  ### sigma, theta, random_length -- parameters to pass to rand_walk()
-  ###	PLOT.IT -- do you want to plot
 
   # Returns:
   ###	dat_all -- list of data.frames for the spread at each time point
@@ -142,7 +122,7 @@ sim_spread <- function(init_dat=NULL, N_seed=2, rand.walk=FALSE,
 
   # Iterate
   t <- 1
-  while (t <= T & nrow(dat)>0) {
+  while (t <= Time & nrow(dat)>0) {
 
     # Generate offspring from survivors
     offspring <- gen_offspring(dat, step_size_os, offspr_mu, K=K,
