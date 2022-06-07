@@ -8,6 +8,16 @@
 #### -- added run_surveil flag to combine with run_surv()
 ################################################################################
 
+#' @param sim
+#'
+#' @param surv_locs
+#' @param g0
+#' @param lam
+#' @param sig
+#' @param det_func
+#' @param use_manouk_error
+#' @param run_surveil
+#'
 #' @export
 p_detect_one <- function(sim=NULL, surv_locs=NULL,
                          g0=1.0, lam=1/10, sig=1,

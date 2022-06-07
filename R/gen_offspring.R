@@ -9,6 +9,17 @@
 ################################################################################
 
 
+#' @param dat
+#'
+#' @param step_size_os
+#' @param offspr_mu
+#' @param K
+#' @param sigma
+#' @param theta
+#' @param random_length
+#' @param sdm
+#' @param ...
+#'
 #' @export
 gen_offspring <- function(dat=NULL,
                           step_size_os=5,

@@ -1,14 +1,43 @@
-################################################################################
-## Function to simulate spread
-## Author: Peter Caley
-## Edited by: Dan Gladish
-## Last updated:  Last updated: 25 Nov 2021
-#### changelog:
-#### 25 Nov 2021
-#### - added additional options for call to rand_walk()
-################################################################################
 
-
+#' @description Simulates spread of
+#'
+#' @param init_dat data frame object containing columns named x, y, Fate, and
+#'   Age of the initial locations of the population to simulate a spread. If
+#'   `NULL` (default), then initial data frame is determined by `N_seed` and
+#'   `bbox` parameters.
+#' @param N_seed integer of number of individuals to spread if `init_dat` is `NULL`
+#' @param rand.walk logical; if `TRUE`, then individuals spread via a random walk
+#'   process.
+#' @param step_size_os step size for dispersal distances of offspring.
+#' @param step_size_ad step size for dispersal distances of adults.
+#' @param K number for the carrying capacity of cells in the raster.
+#' @param age_mu parameter to randomly assign initial ages.
+#' @param offspr_mu parameter passed to `gen_offpring()` indicating the mean
+#'   number of offspring generated per individual per time step using a Poisson
+#'   distribution.
+#' @param bbox a vector of length 4 of the extent if `sdm` is not given.
+#' @param cell_res resolution of the raster if `sdm` not given.
+#' @param sdm a raster of an sdm with cells between 0 and 1.  Default is NULL.
+#' @param sdm_og value of sdm off the grid.  If zero, then individuals die off
+#'   grid.
+#' @param p_alpha alpha parameter for Beta distribution for survival probability
+#'   (currently not implemented).
+#' @param p_beta beta parameter for Beta distribution for survival probability
+#'   (currently not implemented).
+#' @param allow_leave logical indicating if individuals can leave the grid.
+#' @param crw logical indicating a correlated random walk.
+#' @param sigma variance of random walk if specified. Defalut `NULL`
+#' @param theta angle of random walk if specified.  Default `NULL`
+#' @param random_length logical. If `TRUE`, random walk allows random length up
+#'   to `step_size_os`. Default `FALSE`.
+#' @param attractive_areas logical. Passed to `rand_walk()`. If `TRUE`, specify
+#'   areas in sdm to be more attractive and prevent individuals leaving once they
+#'   enter area as defined by raster values.
+#' @param survive_prob logical. If `TRUE` allow for survival/mortality based on
+#'   sdm values.
+#' @param PLOT.IT logical. If `TRUE` plot an amm
+#' @param ... additional arguments to be passed to helper functions.
+#'
 #' @export
 sim_spread <- function(init_dat=NULL, N_seed=2, rand.walk=FALSE,
                       step_size_os=100, step_size_ad=50, T=10, K=1000,
@@ -19,7 +48,7 @@ sim_spread <- function(init_dat=NULL, N_seed=2, rand.walk=FALSE,
                       attractive_areas=FALSE, survive_prob=FALSE,
                       PLOT.IT=TRUE, ...) {
 
-
+  ###	PLOT.IT -- do you want to plot
 
   # Args:
   ###	init_dat -- data.frame contain x, y, Fate and Age of population to be updated

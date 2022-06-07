@@ -1,12 +1,18 @@
 Package: trapDetect
 Title: Simulates spread and calculates probability of detection of pests over traps
-Version: 0.0.1.000
+Version: 0.1.0
 Authors@R: 
-    person(given = "Daniel",
-           family = "Gladish",
-           role = c("aut", "cre"),
-           email = "dan.gladish@csiro.au",
-           comment = c(ORCID = "YOUR-ORCID-ID"))
+    c(person(given = "Daniel",
+             family = "Gladish",
+             role = c("aut", "cre"),
+             email = "dan.gladish@csiro.au",
+             comment = c(ORCID = "0000-0001-6297-890X")),
+      person(given = "Matt",
+             family = "Hill",
+             role = c("aut")),
+      person(given = "Peter",
+             family = "Caley",
+             role = c("aut")))
 Description: What the package does (one paragraph).
 Imports: 
     tidyverse,
@@ -15,7 +21,7 @@ Imports:
     rgdal,
     sp,
     fields
-License: `use_mit_license()`
+License: GPL (>= 3)
 Encoding: UTF-8
 LazyData: true
 Roxygen: list(markdown = TRUE)

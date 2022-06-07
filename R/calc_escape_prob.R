@@ -11,6 +11,42 @@ NULL
 
 #' @import raster
 
+#' @param init_dat
+#'
+#' @param surv_locs
+#' @param sdm
+#' @param N_seed
+#' @param min_surv_locs
+#' @param num_replications
+#' @param rand.walk
+#' @param step_size_os
+#' @param step_size_ad
+#' @param K
+#' @param age_mu
+#' @param offspr_mu
+#' @param bbox
+#' @param cell_res
+#' @param sdm_og
+#' @param p_alpha
+#' @param p_beta
+#' @param allow_leave
+#' @param attractive_areas
+#' @param survive_prob
+#' @param crw
+#' @param sigma
+#' @param theta
+#' @param random_length
+#' @param PLOT.IT
+#' @param g0
+#' @param lam
+#' @param sig
+#' @param det_func
+#' @param use_manouk_error
+#' @param run_surveil
+#' @param return_sim
+#' @param return_all_prob
+#' @param ...
+#'
 #' @export
 calc_escape_prob <- function(init_dat=NULL,
                              surv_locs=NULL,

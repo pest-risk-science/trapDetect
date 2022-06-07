@@ -8,6 +8,11 @@
 
 # Half normal detection function
 
+#' @param d
+#'
+#' @param g0
+#' @param sig
+#'
 #' @export
 p_halfnorm <- function(d, g0=0.7, sig=1) {
   # Args:
@@ -19,6 +24,11 @@ p_halfnorm <- function(d, g0=0.7, sig=1) {
 
 # manouk's detection function (arc sech)
 
+#' @param d
+#'
+#' @param g0
+#' @param lam
+#'
 #' @export
 p_manouk <- function(d, g0=1.0,lam=1/10) {
   # Args:
@@ -28,6 +38,14 @@ p_manouk <- function(d, g0=1.0,lam=1/10) {
 }
 
 
+#' @param sim
+#'
+#' @param surv_pts
+#' @param g0
+#' @param sig
+#' @param lam
+#' @param det_func
+#'
 #' @export
 run_surv <- function(sim=NULL, surv_pts=NULL, g0=0.5,
                      sig=1, lam=1/10, det_func="Manouk") {

@@ -10,6 +10,16 @@
 #### -if raster supplied, made so random walk stays in raster
 ################################################################################
 
+#' @param x
+#'
+#' @param y
+#' @param step_size
+#' @param sigma
+#' @param theta
+#' @param random_length
+#' @param sdm
+#' @param attractive_areas
+#'
 #' @export
 rand_walk <- function(x=0,y=0,step_size=1,sigma=NULL,theta=NULL,
                       random_length=FALSE, sdm=NULL,
