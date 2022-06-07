@@ -6,7 +6,10 @@
 <!-- badges: start -->
 <!-- badges: end -->
 
-The goal of trapDetect is to …
+The goal of trapDetect is to provide the functionality to simulate the
+spread of individuals over a given area (such as an orchard or block),
+and provide the tools to determine the probabilty of detecting a pest
+using various detection functions.
 
 ## Installation
 
@@ -20,38 +23,31 @@ devtools::install_github("dangladish/trapDetect")
 Please note that trapDetect is in early development and likely will
 change significantly.
 
-## Example
+## The main function: calc\_escape\_prob()
 
-This is a basic example which shows you how to solve a common problem:
+The main function is `calc_escape_prob()` which simulates the spread of
+a population of individuals using the `sim_spread()` function if not
+provided, and then determines the probability of detecting an individual
+for a given trap configuration using `p_detect_one()`. There are a
+number of optional arguments in `calc_escape_prob()` which the user can
+set for their own purposes. A basic exmaple can be run using the
+following code:
 
 ``` r
 library(trapDetect)
-## basic example code
+calc_escape_prob()
+#> [1] "Warning: generating survey and raster..."
+#> [1] "No initial data detected, generating random simulations"
+#> $mean_prob
+#>  [1] 0.002087883 0.010622804 0.023414164 0.025484057 0.026623200 0.027987658
+#>  [7] 0.030212210 0.030801545 0.032711044 0.033302982 0.034511957
 ```
 
 What is special about using `README.Rmd` instead of just `README.md`?
 You can include R chunks like so:
-
-``` r
-summary(cars)
-#>      speed           dist       
-#>  Min.   : 4.0   Min.   :  2.00  
-#>  1st Qu.:12.0   1st Qu.: 26.00  
-#>  Median :15.0   Median : 36.00  
-#>  Mean   :15.4   Mean   : 42.98  
-#>  3rd Qu.:19.0   3rd Qu.: 56.00  
-#>  Max.   :25.0   Max.   :120.00
-```
 
 You’ll still need to render `README.Rmd` regularly, to keep `README.md`
 up-to-date. `devtools::build_readme()` is handy for this. You could also
 use GitHub Actions to re-render `README.Rmd` every time you push. An
 example workflow can be found here:
 <https://github.com/r-lib/actions/tree/master/examples>.
-
-You can also embed plots, for example:
-
-<img src="man/figures/README-pressure-1.png" width="100%" />
-
-In that case, don’t forget to commit and push the resulting figure
-files, so they display on GitHub and CRAN.

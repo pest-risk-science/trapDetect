@@ -1,5 +1,11 @@
 
-#' @description This functin simulates the spread in an sdm.
+#' Simulation of Spread
+#'
+#' @description
+#' This function simulates the spread in an sdm.
+#'
+#' @details
+#' A function that will simulate the spread of a data frame over a given sdm
 #'
 #' @param init_dat data frame object containing columns named x, y, Fate, and
 #'   Age of the initial locations of the population to simulate a spread. If
