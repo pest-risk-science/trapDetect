@@ -2,7 +2,7 @@
 % Please edit documentation in R/run_surv.R
 \name{p_manouk}
 \alias{p_manouk}
-\title{Manoukis's detection function}
+\title{Manoukis detection functio}
 \usage{
 p_manouk(d, g0 = 1, lam = 1/10)
 }

@@ -16,7 +16,8 @@ p_halfnorm <- function(d, g0=0.7, sig=1) {
   g0*exp(-d^2/(2*sig^2))
 }
 
-#' Manoukis's detection function
+
+#' Manoukis detection functio
 #'
 #' @description
 #' Calculates Manoukis detection function
