@@ -29,6 +29,10 @@ calls \code{p_halfnorm()}.  See help from those functions for details.}
 Helper function to run surveillance.
 }
 \details{
+<<<<<<< HEAD
 Function returns results of surveillance from a simulation and specified
 surveillance points.
+=======
+Function that returns
+>>>>>>> dba8220e39fbb389dee8c1ea6bb0e995bee640b1
 }

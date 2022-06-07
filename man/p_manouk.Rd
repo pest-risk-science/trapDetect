@@ -2,11 +2,16 @@
 % Please edit documentation in R/run_surv.R
 \name{p_manouk}
 \alias{p_manouk}
+<<<<<<< HEAD
 \title{Manoukis's detection function}
+=======
+\title{Manouk's detection function}
+>>>>>>> dba8220e39fbb389dee8c1ea6bb0e995bee640b1
 \usage{
 p_manouk(d, g0 = 1, lam = 1/10)
 }
 \arguments{
+<<<<<<< HEAD
 \item{d}{the distance of the individual to the device.}
 
 \item{g0}{the probability of detection given the distance is 0.}
@@ -16,11 +21,20 @@ approximately 65\% probability of detection.}
 }
 \description{
 Calculates Manoukis detection function
+=======
+\item{lam}{}
+}
+\description{
+Calculates Manouk's detection function
+>>>>>>> dba8220e39fbb389dee8c1ea6bb0e995bee640b1
 }
 \details{
 Function that returns detection based on Manouk's detection function
 }
+<<<<<<< HEAD
 \references{
 Manoukis, N., Hall, B. & Geib, S. A Computer Model of Insect Traps in a
 Landscape. Sci Rep 4, 7015 (2014). https://doi.org/10.1038/srep07015
 }
+=======
+>>>>>>> dba8220e39fbb389dee8c1ea6bb0e995bee640b1
