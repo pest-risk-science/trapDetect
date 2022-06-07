@@ -7,11 +7,21 @@
 p_halfnorm(d, g0 = 0.7, sig = 1)
 }
 \arguments{
+<<<<<<< HEAD
+=======
+<<<<<<< HEAD
+>>>>>>> b58fced4e2dc03b08c1750c35803db4f4388f032
 \item{d}{the distance of the individual to the device.}
 
 \item{g0}{the probability of detection given the distance is 0.}
 
 \item{sig}{the standard deviation of detection.}
+<<<<<<< HEAD
+=======
+=======
+\item{sig}{}
+>>>>>>> dba8220e39fbb389dee8c1ea6bb0e995bee640b1
+>>>>>>> b58fced4e2dc03b08c1750c35803db4f4388f032
 }
 \description{
 Calculates the half-normal detection function
