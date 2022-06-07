@@ -19,21 +19,23 @@ gen_offspring(
 \arguments{
 \item{dat}{tmp_go}
 
-\item{step_size_os}{tmp_go}
+\item{step_size_os}{step size for dispersal distances of offspring.}
 
-\item{offspr_mu}{tmp_go}
+\item{offspr_mu}{parameter indicating the mean number of offspring generated
+per individual per time step using a Poisson distribution.}
 
-\item{K}{tmp_go}
+\item{K}{number for the carrying capacity of cells in the raster.}
 
-\item{sigma}{tmp_go}
+\item{sigma}{variance of random walk if specified. Defalut \code{NULL}}
 
-\item{theta}{tmp_go}
+\item{theta}{angle of random walk if specified.  Default \code{NULL}}
 
-\item{random_length}{tmp_go}
+\item{random_length}{logical. If \code{TRUE}, random walk allows random length up
+to \code{step_size_os}. Default \code{FALSE}.}
 
-\item{sdm}{tmp_go}
+\item{sdm}{ta raster of an sdm with cells between 0 and 1.  Default is \code{NULL}.}
 
-\item{...}{tmp_go}
+\item{...}{additional arguments to be passed to other functions.}
 }
 \description{
 TMP

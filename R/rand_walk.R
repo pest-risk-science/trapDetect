@@ -7,15 +7,15 @@
 #' TMP
 #'
 #' @param x,y the location (x,y) of the init
-#' @param step_size tmp_rw
-#' @param sigma variance of random walk if specified. Defalut `NULL`
-#' @param theta angle of random walk if specified.  Default `NULL`
+#' @param step_size step size for dispersal distances of individual.
+#' @param sigma variance of random walk if specified. Defalut `NULL`.
+#' @param theta angle of random walk if specified.  Default `NULL`.
 #' @param random_length logical. If `TRUE`, random walk allows random length up
 #'   to `step_size`. Default `FALSE`.
 #' @param sdm a raster of an sdm with cells between 0 and 1.  Default is `NULL`.
 #' @param attractive_areas logical. If `TRUE`, specify areas in sdm to be more
-#'   attractive and prevent individuals leaving once they
-#'   enter area as defined by raster values.
+#'   attractive and prevent individuals leaving once they enter area as defined
+#'   by raster values.
 #'
 #' @export
 rand_walk <- function(x=0,y=0,step_size=1,sigma=NULL,theta=NULL,

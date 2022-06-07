@@ -7,16 +7,17 @@
 #' @details
 #' TMP
 #'
-#' @inherit sim_spread
 #' @param dat tmp_go
-#' @param step_size_os tmp_go
-#' @param offspr_mu tmp_go
-#' @param K tmp_go
-#' @param sigma tmp_go
-#' @param theta tmp_go
-#' @param random_length tmp_go
-#' @param sdm tmp_go
-#' @param ... tmp_go
+#' @param step_size_os step size for dispersal distances of offspring.
+#' @param offspr_mu parameter indicating the mean number of offspring generated
+#'   per individual per time step using a Poisson distribution.
+#' @param K number for the carrying capacity of cells in the raster.
+#' @param sigma variance of random walk if specified. Defalut `NULL`
+#' @param theta angle of random walk if specified.  Default `NULL`
+#' @param random_length logical. If `TRUE`, random walk allows random length up
+#'   to `step_size_os`. Default `FALSE`.
+#' @param sdm ta raster of an sdm with cells between 0 and 1.  Default is `NULL`.
+#' @param ... additional arguments to be passed to other functions.
 #'
 #' @export
 gen_offspring <- function(dat=NULL,
@@ -33,9 +34,6 @@ gen_offspring <- function(dat=NULL,
   ##### - survival "Fate",
   ##### - age "Age",
   ##### - density "dens"
-  ###	step_size_os -- step size for for dispersal distances of offspring
-  ###	offspr_mu -- mean number of offspring generated per individual per time step (Poisson)
-  ###	K -- carrying capacity of cells
   # Returns:
   ###	dat - data frame containing the locations of individuals
 

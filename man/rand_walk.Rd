@@ -18,11 +18,11 @@ rand_walk(
 \arguments{
 \item{x, y}{the location (x,y) of the init}
 
-\item{step_size}{tmp_rw}
+\item{step_size}{step size for dispersal distances of individual.}
 
-\item{sigma}{variance of random walk if specified. Defalut \code{NULL}}
+\item{sigma}{variance of random walk if specified. Defalut \code{NULL}.}
 
-\item{theta}{angle of random walk if specified.  Default \code{NULL}}
+\item{theta}{angle of random walk if specified.  Default \code{NULL}.}
 
 \item{random_length}{logical. If \code{TRUE}, random walk allows random length up
 to \code{step_size}. Default \code{FALSE}.}
@@ -30,8 +30,8 @@ to \code{step_size}. Default \code{FALSE}.}
 \item{sdm}{a raster of an sdm with cells between 0 and 1.  Default is \code{NULL}.}
 
 \item{attractive_areas}{logical. If \code{TRUE}, specify areas in sdm to be more
-attractive and prevent individuals leaving once they
-enter area as defined by raster values.}
+attractive and prevent individuals leaving once they enter area as defined
+by raster values.}
 }
 \description{
 TMP
