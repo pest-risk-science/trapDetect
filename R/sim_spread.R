@@ -1,14 +1,50 @@
-################################################################################
-## Function to simulate spread
-## Author: Peter Caley
-## Edited by: Dan Gladish
-## Last updated:  Last updated: 25 Nov 2021
-#### changelog:
-#### 25 Nov 2021
-#### - added additional options for call to rand_walk()
-################################################################################
-
-
+###	N_seed -- number of individuals to start with if init_dat not given
+### rand.walk -- are individuals fixed, or do they move each time step
+###	step_size_os -- step size for dispersal distances of offspring
+###	step_size_ad -- step size for dispersal distances of adults
+###	T -- number of time steps to run simulation for
+###	K -- carrying capacity for cells
+###	age_mu -- parameter for randomly assigning initial ages
+### offspr_mu - parameter for offspring mean
+###	bbox -- extent (used for plotting)
+###	cell_res -- resolution of raster (for calculating K etc.)
+###	sdm -- a sdm on a raster (values need to on [0,1])
+###	sdm_og -- values to use for sdm off the grid (if zero, all die)
+###	p_alpha, p_beta -- beta parameters governing survival probability (THESE ARE NOT IN)
+### allow_leave -- are individuals allowed to leave the raster?
+### crw -- use correlated random walk or no?
+### sigma, theta, random_length -- parameters to pass to rand_walk()
+###	PLOT.IT -- do you want to plot
+#' @description Simulates spread of
+#'
+#' @param init_dat data frame object containing columns named x, y, Fate, and
+#'   Age of the initial locations of the population to simulate a spread. If
+#'   NULL (default), then initial data frame is determined by `N_seed` and
+#'   `extent` parameters.
+#' @param N_seed integer of number of individuals to spread if `init_dat` is NULL
+#' @param rand.walk logical; if TRUE, then individuals spread via a random walk
+#'   process.
+#' @param step_size_os step size for dispersal distances of offspring.
+#' @param step_size_ad step size for dispersal distances of adults.
+#' @param K number for the carrying capacity of cells in the raster.
+#' @param age_mu parameter to randomly assign initial ages.
+#' @param offspr_mu parameter to
+#' @param bbox
+#' @param cell_res
+#' @param sdm
+#' @param sdm_og
+#' @param p_alpha
+#' @param p_beta
+#' @param allow_leave
+#' @param crw
+#' @param sigma
+#' @param theta
+#' @param random_length
+#' @param attractive_areas
+#' @param survive_prob
+#' @param PLOT.IT
+#' @param ...
+#'
 #' @export
 sim_spread <- function(init_dat=NULL, N_seed=2, rand.walk=FALSE,
                       step_size_os=100, step_size_ad=50, T=10, K=1000,
