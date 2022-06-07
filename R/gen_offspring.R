@@ -9,8 +9,13 @@
 ################################################################################
 
 
-#' @param dat
+#' Generating Offspring
 #'
+#' @description
+#'
+#' @details
+#'
+#' @param dat
 #' @param step_size_os
 #' @param offspr_mu
 #' @param K

@@ -8,6 +8,13 @@
 #### -- added run_surveil flag to combine with run_surv()
 ################################################################################
 
+
+#' Probability to detect one individual
+#'
+#' @description
+#'
+#' @details
+#'
 #' @param sim
 #'
 #' @param surv_locs

@@ -8,11 +8,19 @@ NULL
 NULL
 
 #' @importFrom fields rdist
+NULL
 
 #' @import raster
+NULL
 
-#' @param init_dat
+
+#' Replicate simulation and detection
 #'
+#' @description
+#'
+#' @details
+#'
+#' @param init_dat dtest
 #' @param surv_locs
 #' @param sdm
 #' @param N_seed
@@ -46,8 +54,8 @@ NULL
 #' @param return_sim
 #' @param return_all_prob
 #' @param ...
-#'
 #' @export
+#'
 calc_escape_prob <- function(init_dat=NULL,
                              surv_locs=NULL,
                              sdm=NULL,

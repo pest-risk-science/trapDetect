@@ -10,9 +10,13 @@
 #### -if raster supplied, made so random walk stays in raster
 ################################################################################
 
-#' @param x
+#' Random Walk
 #'
-#' @param y
+#' @description
+#'
+#' @details
+#'
+#' @param x,y the location (x,y) of the init
 #' @param step_size
 #' @param sigma
 #' @param theta

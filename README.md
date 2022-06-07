@@ -39,15 +39,6 @@ calc_escape_prob()
 #> [1] "Warning: generating survey and raster..."
 #> [1] "No initial data detected, generating random simulations"
 #> $mean_prob
-#>  [1] 0.002087883 0.010622804 0.023414164 0.025484057 0.026623200 0.027987658
-#>  [7] 0.030212210 0.030801545 0.032711044 0.033302982 0.034511957
+#>  [1] 0.02707632 0.03085843 0.03535250 0.04205285 0.04459375 0.05340159
+#>  [7] 0.09054427 0.11495000 0.20402785 0.21422997 0.21887270
 ```
-
-What is special about using `README.Rmd` instead of just `README.md`?
-You can include R chunks like so:
-
-You’ll still need to render `README.Rmd` regularly, to keep `README.md`
-up-to-date. `devtools::build_readme()` is handy for this. You could also
-use GitHub Actions to re-render `README.Rmd` every time you push. An
-example workflow can be found here:
-<https://github.com/r-lib/actions/tree/master/examples>.
