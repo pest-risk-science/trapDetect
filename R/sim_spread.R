@@ -24,7 +24,7 @@
 #'   distribution.
 #' @param bbox a vector of length 4 of the extent if `sdm` is not given.
 #' @param cell_res resolution of the raster if `sdm` not given.
-#' @param sdm a raster of an sdm with cells between 0 and 1.  Default is NULL.
+#' @param sdm a raster of an sdm with cells between 0 and 1.  Default is `NULL`.
 #' @param sdm_og value of sdm off the grid.  If zero, then individuals die off
 #'   grid.
 #' @param p_alpha alpha parameter for Beta distribution for survival probability

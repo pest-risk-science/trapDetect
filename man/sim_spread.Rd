@@ -60,7 +60,7 @@ distribution.}
 
 \item{cell_res}{resolution of the raster if \code{sdm} not given.}
 
-\item{sdm}{a raster of an sdm with cells between 0 and 1.  Default is NULL.}
+\item{sdm}{a raster of an sdm with cells between 0 and 1.  Default is \code{NULL}.}
 
 \item{sdm_og}{value of sdm off the grid.  If zero, then individuals die off
 grid.}

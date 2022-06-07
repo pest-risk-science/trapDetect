@@ -43,11 +43,98 @@ calc_escape_prob(
 )
 }
 \arguments{
-\item{init_dat}{dtest}
+\item{init_dat}{data frame object containing columns named x, y, Fate, and
+Age of the initial locations of the population to simulate a spread. If
+\code{NULL} (default), then initial data frame is determined by \code{N_seed} and
+\code{bbox} parameters.}
+
+\item{surv_locs}{tmp_pdo}
+
+\item{sdm}{a raster of an sdm with cells between 0 and 1.  Default is \code{NULL}.}
+
+\item{N_seed}{integer of number of individuals to spread if \code{init_dat} is \code{NULL}}
+
+\item{min_surv_locs}{tmp_cep}
+
+\item{num_replications}{tmp_cep}
+
+\item{rand.walk}{logical; if \code{TRUE}, then individuals spread via a random walk
+process.}
+
+\item{step_size_os}{step size for dispersal distances of offspring.}
+
+\item{step_size_ad}{step size for dispersal distances of adults.}
+
+\item{Time}{the number of time steps for the simulation.}
+
+\item{K}{number for the carrying capacity of cells in the raster.}
+
+\item{age_mu}{parameter to randomly assign initial ages.}
+
+\item{offspr_mu}{parameter passed to \code{gen_offpring()} indicating the mean
+number of offspring generated per individual per time step using a Poisson
+distribution.}
+
+\item{bbox}{a vector of length 4 of the extent if \code{sdm} is not given.}
+
+\item{cell_res}{resolution of the raster if \code{sdm} not given.}
+
+\item{sdm_og}{value of sdm off the grid.  If zero, then individuals die off
+grid.}
+
+\item{p_alpha}{alpha parameter for Beta distribution for survival probability
+(currently not implemented).}
+
+\item{p_beta}{beta parameter for Beta distribution for survival probability
+(currently not implemented).}
+
+\item{allow_leave}{logical indicating if individuals can leave the grid.}
+
+\item{attractive_areas}{logical. Passed to \code{rand_walk()}. If \code{TRUE}, specify
+areas in sdm to be more attractive and prevent individuals leaving once they
+enter area as defined by raster values.}
+
+\item{survive_prob}{logical. If \code{TRUE} allow for survival/mortality based on
+sdm values.}
+
+\item{crw}{logical indicating a correlated random walk.}
+
+\item{sigma}{variance of random walk if specified. Defalut \code{NULL}}
+
+\item{theta}{angle of random walk if specified.  Default \code{NULL}}
+
+\item{random_length}{logical. If \code{TRUE}, random walk allows random length up
+to \code{step_size_os}. Default \code{FALSE}.}
+
+\item{PLOT.IT}{logical. If \code{TRUE} plot an animation of the spread simulation.
+Not recommended for large or long simulations.}
+
+\item{g0}{parameters to pass to detection functions based on
+\code{det_func} argument.}
+
+\item{lam}{parameters to pass to detection functions based on
+\code{det_func} argument.}
+
+\item{sig}{parameters to pass to detection functions based on
+\code{det_func} argument.}
+
+\item{det_func}{a string indicating which detection function to use.  Either
+"Manouk" or "HalfNorm".  "Manouk" calls the function \code{p_manouk()}.  "HalfNorm"
+calls \code{p_halfnorm()}.  See help from those functions for details.}
+
+\item{use_manouk_error}{tmp_pdo}
+
+\item{run_surveil}{tmp_pdo}
+
+\item{return_sim}{tmp_cep}
+
+\item{return_all_prob}{tmp_cep}
+
+\item{...}{additional arguments to be passed to helper functions.}
 }
 \description{
-
+TMP
 }
 \details{
-
+TMP
 }

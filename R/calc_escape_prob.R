@@ -17,43 +17,16 @@ NULL
 #' Replicate simulation and detection
 #'
 #' @description
-#'
+#' TMP
 #' @details
+#' TMP
 #'
-#' @param init_dat dtest
-#' @param surv_locs
-#' @param sdm
-#' @param N_seed
-#' @param min_surv_locs
-#' @param num_replications
-#' @param rand.walk
-#' @param step_size_os
-#' @param step_size_ad
-#' @param K
-#' @param age_mu
-#' @param offspr_mu
-#' @param bbox
-#' @param cell_res
-#' @param sdm_og
-#' @param p_alpha
-#' @param p_beta
-#' @param allow_leave
-#' @param attractive_areas
-#' @param survive_prob
-#' @param crw
-#' @param sigma
-#' @param theta
-#' @param random_length
-#' @param PLOT.IT
-#' @param g0
-#' @param lam
-#' @param sig
-#' @param det_func
-#' @param use_manouk_error
-#' @param run_surveil
-#' @param return_sim
-#' @param return_all_prob
-#' @param ...
+#' @inherit sim_spread
+#' @inherit p_detect_one
+#' @param min_surv_locs tmp_cep
+#' @param num_replications tmp_cep
+#' @param return_sim tmp_cep
+#' @param return_all_prob tmp_cep
 #' @export
 #'
 calc_escape_prob <- function(init_dat=NULL,

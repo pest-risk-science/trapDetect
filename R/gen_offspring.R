@@ -1,29 +1,22 @@
-################################################################################
-## Generate Offspring function
-## Author: Peter Caley
-## Edited by: Dan Gladish
-## Last updated:  Last updated: 25 Nov 2021
-#### changelog:
-#### 25 Nov 2021
-#### - updated rand_walk() call to incorporate changes to that function
-################################################################################
-
 
 #' Generating Offspring
 #'
 #' @description
+#' TMP
 #'
 #' @details
+#' TMP
 #'
-#' @param dat
-#' @param step_size_os
-#' @param offspr_mu
-#' @param K
-#' @param sigma
-#' @param theta
-#' @param random_length
-#' @param sdm
-#' @param ...
+#' @inherit sim_spread
+#' @param dat tmp_go
+#' @param step_size_os tmp_go
+#' @param offspr_mu tmp_go
+#' @param K tmp_go
+#' @param sigma tmp_go
+#' @param theta tmp_go
+#' @param random_length tmp_go
+#' @param sdm tmp_go
+#' @param ... tmp_go
 #'
 #' @export
 gen_offspring <- function(dat=NULL,
