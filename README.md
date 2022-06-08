@@ -4,6 +4,8 @@
 # trapDetect
 
 <!-- badges: start -->
+
+[![R-CMD-check.yaml](https://github.com/dangladish/trapDetect/workflows/R-CMD-check.yaml/badge.svg)](https://github.com/dangladish/trapDetect/actions)
 <!-- badges: end -->
 
 The goal of trapDetect is to provide the functionality to simulate the
@@ -39,6 +41,6 @@ calc_escape_prob()
 #> [1] "Warning: generating survey and raster..."
 #> [1] "No initial data detected, generating random simulations"
 #> $mean_prob
-#>  [1] 0.007164792 0.010765317 0.021337479 0.035047858 0.131751404 0.182035700
-#>  [7] 0.231424210 0.238057696 0.242128926 0.248423539 0.251165711
+#>  [1] 0.001980833 0.007407997 0.012929112 0.016822192 0.026363889 0.066494047
+#>  [7] 0.140832344 0.191965537 0.303142293 0.355364417 0.366404143
 ```
