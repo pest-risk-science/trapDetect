@@ -2,7 +2,7 @@ Package: trapDetect
 Title: Simulates spread and calculates probability of detection of pests over traps
 Version: 0.1.0
 Authors@R: 
-    c(person(given = "Daniel",
+    c(person(given = "Daniel W.",
              family = "Gladish",
              role = c("aut", "cre"),
              email = "dan.gladish@csiro.au",
@@ -13,7 +13,11 @@ Authors@R:
       person(given = "Peter",
              family = "Caley",
              role = c("aut")))
-Description: What the package does (one paragraph).
+Description: The 'trapDetect' package is a flexible framework to simulate the 
+    spread of inidividuals in a population (such as pests) over a specified
+    region (such as an orchard or a block), and determine the probability of
+    detecting an individual within that region given a layout of detection 
+    devices (e.g. traps).
 Imports: 
     tidyverse,
     animation, 

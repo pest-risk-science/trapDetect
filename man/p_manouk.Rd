@@ -14,8 +14,11 @@ p_manouk(d, g0 = 1, lam = 1/10)
 \item{lam}{the attractiveness of a trap, where \eqn{1/\lambda} represents a
 approximately 65\% probability of detection.}
 }
+\value{
+The value of the Manoukis detection function.
+}
 \description{
-Calculates Manoukis detection function
+Calculates Manoukis detection function.
 }
 \details{
 Function that returns detection based on Manouk's detection function

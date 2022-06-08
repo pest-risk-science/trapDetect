@@ -17,7 +17,9 @@ gen_offspring(
 )
 }
 \arguments{
-\item{dat}{tmp_go}
+\item{dat}{data frame of population that will generate offspring containing
+the initial locations of the individual ("x", "y"), the survival ("Fate"),
+age ("Age"), and density ("dens") of a given cell.}
 
 \item{step_size_os}{step size for dispersal distances of offspring.}
 
@@ -37,9 +39,18 @@ to \code{step_size_os}. Default \code{FALSE}.}
 
 \item{...}{additional arguments to be passed to other functions.}
 }
+\value{
+A data frame with columns indicating the location (x, y), survival (Fate),
+and age (Age) of the generated offspring.
+}
 \description{
-TMP
+Takes a given given data frame with locations of a population of individuals
+and generates offspring based on a random walk.
 }
 \details{
-TMP
+The function \code{gen_offspring} is used to generate offspring from individuals
+(e.g. pests) in a population using a Poisson distribution, based on user
+specified mean of the offspring per individual, and then using a random walk
+process, generates the new locations of the offspring.  In general, this
+function is called from the \code{sim_spread()} function.
 }

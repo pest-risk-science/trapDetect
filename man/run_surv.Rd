@@ -25,8 +25,14 @@ run_surv(
 "Manouk" or "HalfNorm".  "Manouk" calls the function \code{p_manouk()}.  "HalfNorm"
 calls \code{p_halfnorm()}.  See help from those functions for details.}
 }
+\value{
+\item{\code{surv_res}}{A list showing the positive traps for each individual.}
+\item{\code{surv_pts}}{A data frame containing the locations of the traps.}
+\item{\code{sdm}}{A raster containing the sdm of the simulation.}
+}
 \description{
-Helper function to run surveillance.
+Helper function to run surveillance. Note this function is not currently
+implemented in the rest of the package.
 }
 \details{
 Function returns results of surveillance from a simulation and specified

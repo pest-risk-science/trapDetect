@@ -33,9 +33,15 @@ to \code{step_size}. Default \code{FALSE}.}
 attractive and prevent individuals leaving once they enter area as defined
 by raster values.}
 }
+\value{
+A vector of length 2, the first element corresponding to the location in the
+x direction, the second in the y directoin.
+}
 \description{
-TMP
+Function to determine new location of an individual based on a random walk
+process.
 }
 \details{
-TMP
+This function takes in a location of an individual and generates a vector
+for the new location of an individual based on a random walk.
 }

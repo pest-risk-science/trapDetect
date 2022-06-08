@@ -1,5 +1,5 @@
 
-#' Half normal detection function
+#' Half nSormal detection function
 #'
 #' @description
 #' Calculates the half-normal detection function
@@ -11,6 +11,9 @@
 #' @param g0 the probability of detection given the distance is 0.
 #' @param sig the standard deviation of detection.
 #'
+#' @return
+#' The value of the Half Normal detection function.
+#'
 #' @export
 p_halfnorm <- function(d, g0=0.7, sig=1) {
   g0*exp(-d^2/(2*sig^2))
@@ -20,7 +23,7 @@ p_halfnorm <- function(d, g0=0.7, sig=1) {
 #' Manoukis' Detection Function
 #'
 #' @description
-#' Calculates Manoukis detection function
+#' Calculates Manoukis detection function.
 #'
 #' @details
 #' Function that returns detection based on Manouk's detection function
@@ -29,6 +32,9 @@ p_halfnorm <- function(d, g0=0.7, sig=1) {
 #' @param g0 the probability of detection given the distance is 0.
 #' @param lam the attractiveness of a trap, where \eqn{1/\lambda} represents a
 #'   approximately 65% probability of detection.
+#'
+#' @return
+#' The value of the Manoukis detection function.
 #'
 #' @references
 #' Manoukis, N., Hall, B. & Geib, S. A Computer Model of Insect Traps in a
@@ -42,7 +48,8 @@ p_manouk <- function(d, g0=1.0,lam=1/10) {
 #' Run Surveillance
 #'
 #' @description
-#' Helper function to run surveillance.
+#' Helper function to run surveillance. Note this function is not currently
+#' implemented in the rest of the package.
 #'
 #' @details
 #' Function returns results of surveillance from a simulation and specified
@@ -56,6 +63,10 @@ p_manouk <- function(d, g0=1.0,lam=1/10) {
 #'   "Manouk" or "HalfNorm".  "Manouk" calls the function `p_manouk()`.  "HalfNorm"
 #'   calls `p_halfnorm()`.  See help from those functions for details.
 #'
+#' @return
+#' \item{`surv_res`}{A list showing the positive traps for each individual.}
+#' \item{`surv_pts`}{A data frame containing the locations of the traps.}
+#' \item{`sdm`}{A raster containing the sdm of the simulation.}
 #' @export
 run_surv <- function(sim=NULL, surv_pts=NULL, g0=0.5,
                      sig=1, lam=1/10, det_func="Manouk") {
