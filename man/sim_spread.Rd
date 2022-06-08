@@ -94,6 +94,14 @@ Not recommended for large or long simulations.}
 
 \item{...}{additional arguments to be passed to helper functions.}
 }
+\value{
+\item{\code{dat}}{A list of data frames, where each element of the list
+corresponds to a time step in the simulated spread.  Each data
+frame contains columns for the location of individuals (x, y),
+the survival (Fate), age at specified time step (Age), sdm
+value (sdm), and density (dens).}
+\item{\code{sdm}}{A raster containing the sdm of the simulation.}
+}
 \description{
 This function simulates the spread in an sdm.
 }

@@ -46,6 +46,14 @@
 #'   Not recommended for large or long simulations.
 #' @param ... additional arguments to be passed to helper functions.
 #'
+#' @return
+#' \item{`dat`}{A list of data frames, where each element of the list
+#'              corresponds to a time step in the simulated spread.  Each data
+#'              frame contains columns for the location of individuals (x, y),
+#'              the survival (Fate), age at specified time step (Age), sdm
+#'              value (sdm), and density (dens).}
+#' \item{`sdm`}{A raster containing the sdm of the simulation.}
+#'
 #' @export
 sim_spread <- function(init_dat=NULL, N_seed=2, rand.walk=FALSE,
                       step_size_os=100, step_size_ad=50, Time=10, K=1000,
@@ -55,11 +63,6 @@ sim_spread <- function(init_dat=NULL, N_seed=2, rand.walk=FALSE,
                       sigma=NULL, theta=NULL, random_length=FALSE,
                       attractive_areas=FALSE, survive_prob=FALSE,
                       PLOT.IT=TRUE, ...) {
-
-  # Returns:
-  ###	dat_all -- list of data.frames for the spread at each time point
-  ### sdm -- raster layer
-
 
   if(is.null(sdm)) {
     # Create sdm assuming all suitable if unknown

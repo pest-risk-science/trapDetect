@@ -1,10 +1,12 @@
 #' Random Walk
 #'
 #' @description
-#' TMP
+#' Function to determine new location of an individual based on a random walk
+#' process.
 #'
 #' @details
-#' TMP
+#' This function takes in a location of an individual and generates a vector
+#' for the new location of an individual based on a random walk.
 #'
 #' @param x,y the location (x,y) of the init
 #' @param step_size step size for dispersal distances of individual.
@@ -16,6 +18,10 @@
 #' @param attractive_areas logical. If `TRUE`, specify areas in sdm to be more
 #'   attractive and prevent individuals leaving once they enter area as defined
 #'   by raster values.
+#'
+#' @return
+#' A vector of length 2, the first element corresponding to the location in the
+#' x direction, the second in the y directoin.
 #'
 #' @export
 rand_walk <- function(x=0,y=0,step_size=1,sigma=NULL,theta=NULL,

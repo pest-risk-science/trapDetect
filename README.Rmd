@@ -40,5 +40,5 @@ library(trapDetect)
 calc_escape_prob()
 ```
 
-
+ 
 

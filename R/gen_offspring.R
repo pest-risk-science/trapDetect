@@ -2,12 +2,19 @@
 #' Generating Offspring
 #'
 #' @description
-#' TMP
+#' Takes a given given data frame with locations of a population of individuals
+#' and generates offspring based on a random walk.
 #'
 #' @details
-#' TMP
+#' The function `gen_offspring` is used to generate offspring from individuals
+#' (e.g. pests) in a population using a Poisson distribution, based on user
+#' specified mean of the offspring per individual, and then using a random walk
+#' process, generates the new locations of the offspring.  In general, this
+#' function is called from the `sim_spread()` function.
 #'
-#' @param dat tmp_go
+#' @param dat data frame of population that will generate offspring containing
+#'   the initial locations of the individual ("x", "y"), the survival ("Fate"),
+#'   age ("Age"), and density ("dens") of a given cell.
 #' @param step_size_os step size for dispersal distances of offspring.
 #' @param offspr_mu parameter indicating the mean number of offspring generated
 #'   per individual per time step using a Poisson distribution.
@@ -19,6 +26,10 @@
 #' @param sdm ta raster of an sdm with cells between 0 and 1.  Default is `NULL`.
 #' @param ... additional arguments to be passed to other functions.
 #'
+#' @return
+#' A data frame with columns indicating the location (x, y), survival (Fate),
+#' and age (Age) of the generated offspring.
+#'
 #' @export
 gen_offspring <- function(dat=NULL,
                           step_size_os=5,
@@ -28,14 +39,6 @@ gen_offspring <- function(dat=NULL,
                           theta=NULL,
                           random_length=FALSE,
                           sdm=NULL, ...) {
-  # Args:
-  ### dat -- data frame containing
-  ##### - initial locations of individuals ("x","y"),
-  ##### - survival "Fate",
-  ##### - age "Age",
-  ##### - density "dens"
-  # Returns:
-  ###	dat - data frame containing the locations of individuals
 
   if(nrow(dat)>0) {
 

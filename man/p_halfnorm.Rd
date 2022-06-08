@@ -2,7 +2,7 @@
 % Please edit documentation in R/run_surv.R
 \name{p_halfnorm}
 \alias{p_halfnorm}
-\title{Half normal detection function}
+\title{Half nSormal detection function}
 \usage{
 p_halfnorm(d, g0 = 0.7, sig = 1)
 }
@@ -12,6 +12,9 @@ p_halfnorm(d, g0 = 0.7, sig = 1)
 \item{g0}{the probability of detection given the distance is 0.}
 
 \item{sig}{the standard deviation of detection.}
+}
+\value{
+The value of the Half Normal detection function.
 }
 \description{
 Calculates the half-normal detection function
