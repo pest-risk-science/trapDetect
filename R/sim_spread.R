@@ -33,7 +33,7 @@
 #'   (currently not implemented).
 #' @param allow_leave logical indicating if individuals can leave the grid.
 #' @param crw logical indicating a correlated random walk.
-#' @param sigma variance of random walk if specified. Defalut `NULL`
+#' @param sigma variance of random walk if specified. Default `NULL`
 #' @param theta angle of random walk if specified.  Default `NULL`
 #' @param random_length logical. If `TRUE`, random walk allows random length up
 #'   to `step_size_os`. Default `FALSE`.

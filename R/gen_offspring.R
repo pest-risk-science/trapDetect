@@ -19,7 +19,7 @@
 #' @param offspr_mu parameter indicating the mean number of offspring generated
 #'   per individual per time step using a Poisson distribution.
 #' @param K number for the carrying capacity of cells in the raster.
-#' @param sigma variance of random walk if specified. Defalut `NULL`
+#' @param sigma variance of random walk if specified. Default `NULL`
 #' @param theta angle of random walk if specified.  Default `NULL`
 #' @param random_length logical. If `TRUE`, random walk allows random length up
 #'   to `step_size_os`. Default `FALSE`.

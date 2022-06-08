@@ -21,7 +21,7 @@ The value of the Manoukis detection function.
 Calculates Manoukis detection function.
 }
 \details{
-Function that returns detection based on Manouk's detection function
+Function that returns detection based on Manoukis detection function
 }
 \references{
 Manoukis, N., Hall, B. & Geib, S. A Computer Model of Insect Traps in a

@@ -16,11 +16,11 @@ rand_walk(
 )
 }
 \arguments{
-\item{x, y}{the location (x,y) of the init}
+\item{x, y}{the location (x,y) of the initial individual.}
 
 \item{step_size}{step size for dispersal distances of individual.}
 
-\item{sigma}{variance of random walk if specified. Defalut \code{NULL}.}
+\item{sigma}{variance of random walk if specified. Default \code{NULL}.}
 
 \item{theta}{angle of random walk if specified.  Default \code{NULL}.}
 
@@ -35,7 +35,7 @@ by raster values.}
 }
 \value{
 A vector of length 2, the first element corresponding to the location in the
-x direction, the second in the y directoin.
+x direction, the second in the y direction.
 }
 \description{
 Function to determine new location of an individual based on a random walk

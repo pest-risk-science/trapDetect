@@ -2,7 +2,7 @@
 % Please edit documentation in R/run_surv.R
 \name{p_halfnorm}
 \alias{p_halfnorm}
-\title{Half nSormal detection function}
+\title{Half Normal detection function}
 \usage{
 p_halfnorm(d, g0 = 0.7, sig = 1)
 }

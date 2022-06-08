@@ -8,7 +8,7 @@
 
 The goal of trapDetect is to provide the functionality to simulate the
 spread of individuals over a given area (such as an orchard or block),
-and provide the tools to determine the probabilty of detecting a pest
+and provide the tools to determine the probability of detecting a pest
 using various detection functions.
 
 ## Installation
@@ -30,7 +30,7 @@ a population of individuals using the `sim_spread()` function if not
 provided, and then determines the probability of detecting an individual
 for a given trap configuration using `p_detect_one()`. There are a
 number of optional arguments in `calc_escape_prob()` which the user can
-set for their own purposes. A basic exmaple can be run using the
+set for their own purposes. A basic example can be run using the
 following code:
 
 ``` r
@@ -38,6 +38,7 @@ library(trapDetect)
 calc_escape_prob()
 #> [1] "Warning: generating survey and raster..."
 #> [1] "No initial data detected, generating random simulations"
-#>  [1] 0.001475055 0.004152568 0.007893457 0.019125796 0.024517261 0.026710217
-#>  [7] 0.029412552 0.045169336 0.049119065 0.049925328 0.050334557
+#> $mean_prob
+#>  [1] 0.007164792 0.010765317 0.021337479 0.035047858 0.131751404 0.182035700
+#>  [7] 0.231424210 0.238057696 0.242128926 0.248423539 0.251165711
 ```
