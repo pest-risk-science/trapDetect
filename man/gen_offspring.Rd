@@ -28,7 +28,7 @@ per individual per time step using a Poisson distribution.}
 
 \item{K}{number for the carrying capacity of cells in the raster.}
 
-\item{sigma}{variance of random walk if specified. Defalut \code{NULL}}
+\item{sigma}{variance of random walk if specified. Default \code{NULL}}
 
 \item{theta}{angle of random walk if specified.  Default \code{NULL}}
 

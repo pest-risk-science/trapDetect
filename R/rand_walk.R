@@ -8,9 +8,9 @@
 #' This function takes in a location of an individual and generates a vector
 #' for the new location of an individual based on a random walk.
 #'
-#' @param x,y the location (x,y) of the init
+#' @param x,y the location (x,y) of the initial individual.
 #' @param step_size step size for dispersal distances of individual.
-#' @param sigma variance of random walk if specified. Defalut `NULL`.
+#' @param sigma variance of random walk if specified. Default `NULL`.
 #' @param theta angle of random walk if specified.  Default `NULL`.
 #' @param random_length logical. If `TRUE`, random walk allows random length up
 #'   to `step_size`. Default `FALSE`.
@@ -21,7 +21,7 @@
 #'
 #' @return
 #' A vector of length 2, the first element corresponding to the location in the
-#' x direction, the second in the y directoin.
+#' x direction, the second in the y direction.
 #'
 #' @export
 rand_walk <- function(x=0,y=0,step_size=1,sigma=NULL,theta=NULL,

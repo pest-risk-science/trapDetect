@@ -18,7 +18,7 @@ knitr::opts_chunk$set(
 <!-- badges: start -->
 <!-- badges: end -->
 
-The goal of trapDetect is to provide the functionality to simulate the spread of individuals over a given area (such as an orchard or block), and provide the tools to determine the probabilty of detecting a pest using various detection functions.  
+The goal of trapDetect is to provide the functionality to simulate the spread of individuals over a given area (such as an orchard or block), and provide the tools to determine the probability of detecting a pest using various detection functions.  
 
 ## Installation
 
@@ -33,7 +33,7 @@ Please note that trapDetect is in early development and likely will change signi
 
 ## The main function: calc_escape_prob()
 
-The main function is `calc_escape_prob()` which simulates the spread of a population of individuals using the `sim_spread()` function if not provided, and then determines the probability of detecting an individual for a given trap configuration using `p_detect_one()`.  There are a number of optional arguments in `calc_escape_prob()` which the user can set for their own purposes.  A basic exmaple can be run using the following code:
+The main function is `calc_escape_prob()` which simulates the spread of a population of individuals using the `sim_spread()` function if not provided, and then determines the probability of detecting an individual for a given trap configuration using `p_detect_one()`.  There are a number of optional arguments in `calc_escape_prob()` which the user can set for their own purposes.  A basic example can be run using the following code:
 
 ```{r example}
 library(trapDetect)

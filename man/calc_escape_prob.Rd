@@ -100,7 +100,7 @@ sdm values.}
 
 \item{crw}{logical indicating a correlated random walk.}
 
-\item{sigma}{variance of random walk if specified. Defalut \code{NULL}}
+\item{sigma}{variance of random walk if specified. Default \code{NULL}}
 
 \item{theta}{angle of random walk if specified.  Default \code{NULL}}
 

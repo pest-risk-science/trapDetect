@@ -1,5 +1,5 @@
 Package: trapDetect
-Title: Simulates spread and calculates probability of detection of pests over traps
+Title: Simulates Spread and Calculates Probability of Detection of Pests over Traps
 Version: 0.1.0
 Authors@R: 
     c(person(given = "Daniel W.",
@@ -19,11 +19,8 @@ Description: The 'trapDetect' package is a flexible framework to simulate the
     detecting an individual within that region given a layout of detection 
     devices (e.g. traps).
 Imports: 
-    tidyverse,
     animation, 
     raster, 
-    rgdal,
-    sp,
     fields
 License: GPL (>= 3) + file LICENSE
 Encoding: UTF-8

@@ -1,5 +1,5 @@
 
-#' Half nSormal detection function
+#' Half Normal detection function
 #'
 #' @description
 #' Calculates the half-normal detection function
@@ -26,7 +26,7 @@ p_halfnorm <- function(d, g0=0.7, sig=1) {
 #' Calculates Manoukis detection function.
 #'
 #' @details
-#' Function that returns detection based on Manouk's detection function
+#' Function that returns detection based on Manoukis detection function
 #'
 #' @param d the distance of the individual to the device.
 #' @param g0 the probability of detection given the distance is 0.
