@@ -5,7 +5,7 @@
 
 <!-- badges: start -->
 
-[![R-CMD-check.yaml](https://github.com/dangladish/trapDetect/workflows/R-CMD-check.yaml/badge.svg)](https://github.com/dangladish/trapDetect/actions)
+[![R-CMD-check](https://github.com/dangladish/trapDetect/workflows/R-CMD-check.yaml/badge.svg)](https://github.com/dangladish/trapDetect/actions)
 <!-- badges: end -->
 
 The goal of trapDetect is to provide the functionality to simulate the
@@ -41,6 +41,12 @@ calc_escape_prob()
 #> [1] "Warning: generating survey and raster..."
 #> [1] "No initial data detected, generating random simulations"
 #> $mean_prob
-#>  [1] 0.001980833 0.007407997 0.012929112 0.016822192 0.026363889 0.066494047
-#>  [7] 0.140832344 0.191965537 0.303142293 0.355364417 0.366404143
+#>  [1] 0.0005040075 0.0007492030 0.0019656035 0.0026210432 0.0033459873
+#>  [6] 0.0048500183 0.0063010609 0.0082420652 0.0104687096 0.0130271438
+#> [11] 0.0175178484
 ```
+
+## Contact
+
+For all inquires regarding the `trapDetect` R package, please contact:
+Dan Gladish (<Dan.Gladish@data61.csiro.au>).
