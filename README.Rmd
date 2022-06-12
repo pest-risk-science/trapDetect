@@ -14,9 +14,8 @@ knitr::opts_chunk$set(
 ```
 
 # trapDetect
-
 <!-- badges: start -->
-[![R-CMD-check.yaml](https://github.com/dangladish/trapDetect/workflows/R-CMD-check.yaml/badge.svg)](https://github.com/dangladish/trapDetect/actions)
+[![R-CMD-check](https://github.com/dangladish/trapDetect/workflows/R-CMD-check/badge.svg)](https://github.com/dangladish/trapDetect/actions)
 <!-- badges: end -->
 
 The goal of trapDetect is to provide the functionality to simulate the spread of individuals over a given area (such as an orchard or block), and provide the tools to determine the probability of detecting a pest using various detection functions.  
@@ -41,5 +40,6 @@ library(trapDetect)
 calc_escape_prob()
 ```
 
- 
+## Contact
+For all inquires regarding the `trapDetect` R package, please contact: Dan Gladish (<Dan.Gladish@data61.csiro.au>).  
 
