@@ -15,7 +15,7 @@ knitr::opts_chunk$set(
 
 # trapDetect
 <!-- badges: start -->
-[![R-CMD-check](https://github.com/dangladish/trapDetect/workflows/R-CMD-check/badge.svg)](https://github.com/dangladish/trapDetect/actions)
+  [![R-CMD-check](https://github.com/dangladish/trapDetect/workflows/R-CMD-check/badge.svg)](https://github.com/dangladish/trapDetect/actions)
 <!-- badges: end -->
 
 The goal of trapDetect is to provide the functionality to simulate the spread of individuals over a given area (such as an orchard or block), and provide the tools to determine the probability of detecting a pest using various detection functions.  
