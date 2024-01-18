@@ -20,13 +20,7 @@ p_detect_one(
 
 \item{surv_locs}{a data frame containing the locations of the traps.}
 
-\item{g0}{parameters to pass to detection functions based on
-\code{det_func} argument.}
-
-\item{lam}{parameters to pass to detection functions based on
-\code{det_func} argument.}
-
-\item{sig}{parameters to pass to detection functions based on
+\item{g0, sig, lam}{parameters to pass to detection functions based on
 \code{det_func} argument.}
 
 \item{det_func}{a string indicating which detection function to use.  Either
