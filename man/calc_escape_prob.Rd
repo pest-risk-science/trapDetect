@@ -110,13 +110,7 @@ to \code{step_size_os}. Default \code{FALSE}.}
 \item{PLOT.IT}{logical. If \code{TRUE} plot an animation of the spread simulation.
 Not recommended for large or long simulations.}
 
-\item{g0}{parameters to pass to detection functions based on
-\code{det_func} argument.}
-
-\item{lam}{parameters to pass to detection functions based on
-\code{det_func} argument.}
-
-\item{sig}{parameters to pass to detection functions based on
+\item{g0, sig, lam}{parameters to pass to detection functions based on
 \code{det_func} argument.}
 
 \item{det_func}{a string indicating which detection function to use.  Either
