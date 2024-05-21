@@ -1,3 +1,4 @@
+
 #' Simulation of spread and capture
 #'
 #' @description
@@ -106,10 +107,6 @@ sim_capture <- function(init_dat=NULL, N_seed=2, rand.walk=TRUE, surv_loc = NULL
   } else {
     sdm0 <- sdm
   }
-
-
-
-  ##################
 
   # Iterate
   t <- 1

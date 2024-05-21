@@ -190,9 +190,9 @@ calc_escape_prob <- function(init_dat=NULL,
   return_list <- list()
   return_list$mean_prob = res_sum
 
-  if(return_all_prob) {
+  #if(return_all_prob) {
     return_list$probs = res
-  }
+  #}
 
   if(return_sim) {
     return_list$sim = sim
