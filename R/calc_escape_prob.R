@@ -90,6 +90,7 @@ calc_escape_prob <- function(init_dat=NULL,
                              sig = 1,
                              det_func="Manouk",
                              use_manouk_error=FALSE,
+                             get_first_detect=FALSE,
                              run_surveil=FALSE,
                              return_sim=FALSE,
                              return_all_prob=FALSE,...) {
@@ -144,17 +145,34 @@ calc_escape_prob <- function(init_dat=NULL,
                               PLOT.IT=PLOT.IT),
                    simplify = FALSE)
 
-  res <- do.call("rbind",lapply(sim,
-                                function(x) {
-                                  p_detect_one(sim=x,
-                                               surv_locs=surv_locs,
-                                               g0=g0,
-                                               lam=lam,
-                                               sig=sig,
-                                               det_func=det_func,
-                                               use_manouk_error=use_manouk_error,
-                                               run_surveil = FALSE)
-                                }))
+
+  p_res_list <- lapply(sim,
+                       function(x) {
+                         p_detect_one(sim=x,
+                                      surv_locs=surv_locs,
+                                      g0=g0,
+                                      lam=lam,
+                                      sig=sig,
+                                      det_func=det_func,
+                                      use_manouk_error=use_manouk_error,
+                                      run_surveil = TRUE)
+                       })
+  res <- do.call("rbind",lapply(p_res_list,function(x)x[['p_cum_out']]))
+
+  # Get first detection?
+  if(get_first_detect) { ##TODO ADD THIS
+    tmp1 <- lapply(p_res_list,function(x) x[['surv_res']])
+    tmp2 <- lapply(tmp1,function(x)lapply(x,function(xx)nrow(xx[['pos_trap_nos']])))
+    first_detect <- apply(do.call("rbind",lapply(tmp2,unlist)),1,
+                          function(x){
+                            ind_val <- which(x>0)
+                            if(length(ind_val)==0) {return_val <- 0}
+                            if(length(ind_val)>0) {return_val <- min(ind_val)}
+                            return_val
+                          }
+    )
+  }
+
 
   # Calculate means over simulations
   res_sum <- apply(res,2,mean)
@@ -164,12 +182,16 @@ calc_escape_prob <- function(init_dat=NULL,
   return_list <- list()
   return_list$mean_prob = res_sum
 
-  if(return_all_prob) {
+  #if(return_all_prob) {
     return_list$probs = res
-  }
+  #}
 
   if(return_sim) {
     return_list$sim = sim
+  }
+
+  if(get_first_detect) {
+    return_list$first_detect = first_detect
   }
 
   return(return_list)
