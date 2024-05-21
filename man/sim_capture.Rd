@@ -2,7 +2,7 @@
 % Please edit documentation in R/sim_capture.R
 \name{sim_capture}
 \alias{sim_capture}
-\title{Simulation of spread and capture}
+\title{Simulation of spread and capture of pests}
 \usage{
 sim_capture(
   init_dat = NULL,
@@ -49,11 +49,15 @@ Age of the initial locations of the population to simulate a spread. If
 \item{rand.walk}{logical; if \code{TRUE}, then individuals spread via a random walk
 process.}
 
-\item{surv_loc}{TODO}
+\item{surv_loc}{a data frame containing the locations of the traps. Default
+\code{NULL}.}
 
-\item{ntraps}{TODO}
+\item{ntraps}{Must be specified if \code{surv_loc} is \code{NULL}, the number of traps
+to be generated in a grid.}
 
-\item{prop_inside}{TODO}
+\item{prop_inside}{If \code{surv_loc} is \code{NULL}, specifies the distance from the
+border of the raster the grid starts, as a proportion of the length of
+the edge of the bounding box.}
 
 \item{det_func}{a string indicating which detection function to use.  Either
 "Manouk" or "HalfNorm".  "Manouk" calls the function \code{p_manouk()}.  "HalfNorm"
@@ -115,11 +119,26 @@ sdm values.}
 \item{...}{additional arguments to be passed to helper functions.}
 }
 \value{
-TODO
+\item{dat}{A list of data frames, where each element of the list
+corresponds to a time step in the simulated spread.  Each data
+frame contains columns for the location of individuals (x, y),
+the survival (Fate), age at specified time step (Age), sdm
+value (sdm), and density (dens).}
+\item{sdm}{A raster containing the sdm of the simulation.}
+\item{surv_loc}{A data frame containing the locations of the traps.}
+\item{captured}{A vector of length Time+1 of the number of captured pests
+during that time step. First element is time point 0 and
+always 0.}
+\item{total_captured}{A vector of length Time+1 of the cumulative total
+caught pests up to that point.First element is time point 0
+and always 0.}
 }
 \description{
-TODO
+This function simulates spread and captures of an outbreak.
 }
 \details{
-TODO
+Takes in an sdm, initial data, and potential survey locations.  If no sdm,
+data, or survey locations are specified, generates a grid of monitoring
+devices in a square uniform block.  User must specify the number of traps
+if no survey locations given.
 }

@@ -1,11 +1,14 @@
 
-#' Simulation of spread and capture
+#' Simulation of spread and capture of pests
 #'
 #' @description
-#' TODO
+#' This function simulates spread and captures of an outbreak.
 #'
 #' @details
-#' TODO
+#' Takes in an sdm, initial data, and potential survey locations.  If no sdm,
+#' data, or survey locations are specified, generates a grid of monitoring
+#' devices in a square uniform block.  User must specify the number of traps
+#' if no survey locations given.
 #'
 #' @inherit sim_spread
 #' @inherit calc_escape_prob
@@ -17,11 +20,19 @@
 #'   border of the raster the grid starts, as a proportion of the length of
 #'   the edge of the bounding box.
 #' @return
-#' \item{dat}{}
-#' \item{sdm}{}
-#' \item{surv_loc}{}
-#' \item{captured}{}
-#' \item{total_captured}{}
+#' \item{dat}{A list of data frames, where each element of the list
+#'              corresponds to a time step in the simulated spread.  Each data
+#'              frame contains columns for the location of individuals (x, y),
+#'              the survival (Fate), age at specified time step (Age), sdm
+#'              value (sdm), and density (dens).}
+#' \item{sdm}{A raster containing the sdm of the simulation.}
+#' \item{surv_loc}{A data frame containing the locations of the traps.}
+#' \item{captured}{A vector of length Time+1 of the number of captured pests
+#'                   during that time step. First element is time point 0 and
+#'                   always 0.}
+#' \item{total_captured}{A vector of length Time+1 of the cumulative total
+#'                   caught pests up to that point.First element is time point 0
+#'                   and always 0.}
 #'
 #' @export
 
