@@ -1,6 +1,6 @@
 Package: trapDetect
 Title: Simulates Spread and Calculates Probability of Detection of Pests over Traps
-Version: 0.1.0
+Version: 0.2.0
 Authors@R: 
     c(person(given = "Daniel W.",
              family = "Gladish",
