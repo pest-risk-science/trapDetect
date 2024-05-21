@@ -6,6 +6,7 @@
 <!-- badges: start -->
 
 [![R-CMD-check](https://github.com/dangladish/trapDetect/workflows/R-CMD-check/badge.svg)](https://github.com/dangladish/trapDetect/actions)
+[![R-CMD-check](https://github.com/dangladish/trapDetect/actions/workflows/R-CMD-check.yaml/badge.svg)](https://github.com/dangladish/trapDetect/actions/workflows/R-CMD-check.yaml)
 <!-- badges: end -->
 
 The goal of trapDetect is to provide the functionality to simulate the
@@ -25,7 +26,7 @@ devtools::install_github("dangladish/trapDetect")
 Please note that trapDetect is in early development and likely will
 change significantly.
 
-## The main function: calc\_escape\_prob()
+## The main function: calc_escape_prob()
 
 The main function is `calc_escape_prob()` which simulates the spread of
 a population of individuals using the `sim_spread()` function if not
@@ -41,8 +42,16 @@ calc_escape_prob()
 #> [1] "Warning: generating survey and raster..."
 #> [1] "No initial data detected, generating random simulations"
 #> $mean_prob
-#>  [1] 0.002411723 0.011036926 0.014960908 0.017053293 0.017813210 0.020104458
-#>  [7] 0.020952240 0.021419445 0.021736207 0.022426239 0.022916355
+#>  [1] 0.1787323 0.1993616 0.2935411 0.3145700 0.3564179 0.3668999 0.4054920
+#>  [8] 0.4195365 0.4388088 0.4800360 0.7019149
+#> 
+#> $probs
+#>            [,1]      [,2]      [,3]       [,4]      [,5]      [,6]      [,7]
+#> [1,] 0.34659418 0.3808342 0.5532952 0.57142240 0.6127313 0.6274521 0.6607582
+#> [2,] 0.01087033 0.0178889 0.0337870 0.05771758 0.1001046 0.1063477 0.1502259
+#>           [,8]      [,9]     [,10]     [,11]
+#> [1,] 0.6805642 0.6953374 0.7014278 0.7029934
+#> [2,] 0.1585088 0.1822803 0.2586443 0.7008364
 ```
 
 ## Contact
