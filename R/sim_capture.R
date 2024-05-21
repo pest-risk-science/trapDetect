@@ -9,11 +9,19 @@
 #'
 #' @inherit sim_spread
 #' @inherit calc_escape_prob
-#' @param surv_loc TODO
-#' @param ntraps TODO
-#' @param prop_inside TODO
+#' @param surv_loc a data frame containing the locations of the traps. Default
+#'   `NULL`.
+#' @param ntraps Must be specified if `surv_loc` is `NULL`, the number of traps
+#'   to be generated in a grid.
+#' @param prop_inside If `surv_loc` is `NULL`, specifies the distance from the
+#'   border of the raster the grid starts, as a proportion of the length of
+#'   the edge of the bounding box.
 #' @return
-#' TODO
+#' \item{dat}{}
+#' \item{sdm}{}
+#' \item{surv_loc}{}
+#' \item{captured}{}
+#' \item{total_captured}{}
 #'
 #' @export
 
@@ -198,6 +206,7 @@ sim_capture <- function(init_dat=NULL, N_seed=2, rand.walk=TRUE, surv_loc = NULL
   return(list(
     dat=dat_all,
     sdm=sdm,
+    surv_loc=surv_loc,
     captured=captured,
     total_captured=total_captured
   ))
