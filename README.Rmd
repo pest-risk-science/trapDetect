@@ -15,6 +15,10 @@ knitr::opts_chunk$set(
 
 # trapDetect
 <!-- badges: start -->
+<<<<<<< HEAD
+=======
+  [![R-CMD-check](https://github.com/dangladish/trapDetect/workflows/R-CMD-check/badge.svg)](https://github.com/dangladish/trapDetect/actions)
+>>>>>>> 18ed2c71958bd5cde2a6e216e3c46af6bc6e66bc
 [![R-CMD-check](https://github.com/dangladish/trapDetect/actions/workflows/R-CMD-check.yaml/badge.svg)](https://github.com/dangladish/trapDetect/actions/workflows/R-CMD-check.yaml)
 <!-- badges: end -->
 
