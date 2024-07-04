@@ -19,7 +19,7 @@ You can install trapDetect from [GitHub](https://github.com/) with:
 
 ``` r
 # install.packages("devtools")
-devtools::install_github("dangladish/trapDetect")
+devtools::install_github("pest-risk-science/trapDetect")
 ```
 
 Please note that trapDetect is in early development and likely will
