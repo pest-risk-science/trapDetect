@@ -42,4 +42,3 @@ calc_escape_prob()
 
 ## Contact
 For all inquires regarding the `trapDetect` R package, please contact: Dan Gladish (<Dan.Gladish@data61.csiro.au>).  
-
