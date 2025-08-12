@@ -18,7 +18,7 @@ NULL
 #'
 #' @description
 #' The main function of the `trapDetect` package.  This function is a wrapper to
-#' call `sim_spread()` if necessary and `p_detect_one()` multiple times.
+#' call `sim_spread()` if necessary and `p_detect_one()` multiple times (recommended).
 #'
 #' @details
 #' This function generates multiple simulations of a population of individuals

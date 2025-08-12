@@ -19,13 +19,12 @@ You can install trapDetect from [GitHub](https://github.com/) with:
 
 ``` r
 # install.packages("devtools")
-devtools::install_github("pest-risk-science/trapDetect")
+devtools::install_github("dangladish/trapDetect")
 ```
 
-Please note that trapDetect is in early development and likely will
-change significantly.
+Please note that `trapDetect` is in development.
 
-## The main function: calc_escape_prob()
+## The main function: `calc_escape_prob()`
 
 The main function is `calc_escape_prob()` which simulates the spread of
 a population of individuals using the `sim_spread()` function if not
@@ -41,17 +40,27 @@ calc_escape_prob()
 #> [1] "Warning: generating survey and raster..."
 #> [1] "No initial data detected, generating random simulations"
 #> $mean_prob
-#>  [1] 0.01062590 0.07916914 0.33672593 0.35273204 0.36670331 0.38948848
-#>  [7] 0.41201920 0.50599636 0.58316270 0.65313028 0.66167424
+#>  [1] 0.07278318 0.18362913 0.31703724 0.34558781 0.50491126 0.56712234
+#>  [7] 0.80924829 0.81776350 0.83138949 0.83506552 0.83606037
 #> 
 #> $probs
-#>              [,1]        [,2]        [,3]        [,4]       [,5]       [,6]
-#> [1,] 0.0006887759 0.001340866 0.005473481 0.007041243 0.01612678 0.01991006
-#> [2,] 0.0205630170 0.156997419 0.667978386 0.698422842 0.71727983 0.75906689
-#>            [,7]      [,8]      [,9]     [,10]     [,11]
-#> [1,] 0.04636318 0.2198791 0.3167590 0.4285579 0.4417856
-#> [2,] 0.77767523 0.7921136 0.8495664 0.8777026 0.8815629
+#>            [,1]       [,2]       [,3]      [,4]      [,5]      [,6]      [,7]
+#> [1,] 0.12820562 0.30565717 0.56540698 0.5882247 0.6976356 0.7087125 0.7101887
+#> [2,] 0.01736075 0.06160109 0.06866751 0.1029509 0.3121869 0.4255322 0.9083079
+#>           [,8]      [,9]    [,10]     [,11]
+#> [1,] 0.7105663 0.7113231 0.716181 0.7173269
+#> [2,] 0.9249607 0.9514559 0.953950 0.9547938
 ```
+
+## Simulate Capture: `sim_capture()`
+
+The `sim_capture()` focuses on trap catch counts rather than probability
+of capture. This function acts in a similar manner as `sim_spread()` but
+needs information about detection devices. This can be in the form of
+trap locations or number of traps in the space. If number of traps is
+specified, traps are arranged in a grid covering the block as much as
+possible. It is recommended to run `sim_capture()` multiple times for
+uncertainty estimates.
 
 ## Contact
 

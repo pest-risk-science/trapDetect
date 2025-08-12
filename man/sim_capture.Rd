@@ -140,5 +140,6 @@ This function simulates spread and captures of an outbreak.
 Takes in an sdm, initial data, and potential survey locations.  If no sdm,
 data, or survey locations are specified, generates a grid of monitoring
 devices in a square uniform block.  User must specify the number of traps
-if no survey locations given.
+if no survey locations given. It is recommended to run this function multiple
+times.
 }

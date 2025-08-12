@@ -154,7 +154,7 @@ element of vector is returned as 0.}
 }
 \description{
 The main function of the \code{trapDetect} package.  This function is a wrapper to
-call \code{sim_spread()} if necessary and \code{p_detect_one()} multiple times.
+call \code{sim_spread()} if necessary and \code{p_detect_one()} multiple times (recommended).
 }
 \details{
 This function generates multiple simulations of a population of individuals
