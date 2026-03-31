@@ -25,12 +25,15 @@
 #'   to `step_size_os`. Default `FALSE`.
 #' @param sdm a SpatRaster (terra) of an sdm with cells between 0 and 1.
 #'   Default is `NULL`.
+#' @param sdm_vec optional pre-extracted numeric vector of SDM cell values
+#'   passed through to `rand_walk()` for fast boundary checks.
 #' @param ... additional arguments to be passed to other functions.
 #'
 #' @return
 #' A data frame with columns indicating the location (x, y), survival (Fate),
 #' and age (Age) of the generated offspring.
 #'
+#' @importFrom stats rpois
 #' @export
 gen_offspring <- function(dat = NULL,
                           step_size_os = 5,
@@ -39,7 +42,8 @@ gen_offspring <- function(dat = NULL,
                           sigma = NULL,
                           theta = NULL,
                           random_length = FALSE,
-                          sdm = NULL, ...) {
+                          sdm = NULL,
+                          sdm_vec = NULL, ...) {
 
   if (nrow(dat) > 0) {
 
@@ -66,7 +70,8 @@ gen_offspring <- function(dat = NULL,
                             sigma = sigma,
                             theta = theta,
                             random_length = random_length,
-                            sdm = sdm)
+                            sdm = sdm,
+                            sdm_vec = sdm_vec)
       recruits$x <- new_locs[, 1]
       recruits$y <- new_locs[, 2]
     }

@@ -19,6 +19,10 @@
 #'   to `step_size`. Default `FALSE`.
 #' @param sdm a SpatRaster (terra) of an sdm with cells between 0 and 1.
 #'   Default is `NULL`.
+#' @param sdm_vec optional pre-extracted numeric vector of SDM cell values
+#'   (i.e. `terra::values(sdm)[, 1]`). When supplied, boundary checks use
+#'   fast cell-index lookups instead of `terra::extract()`, saving repeated
+#'   raster overhead inside tight loops.
 #' @param attractive_areas logical. If `TRUE`, specify areas in sdm to be more
 #'   attractive and prevent individuals leaving once they enter area as defined
 #'   by raster values.
@@ -26,10 +30,11 @@
 #' @return
 #' A two-column matrix of new (x, y) locations, one row per individual.
 #'
-#' @importFrom terra extract
+#' @importFrom terra extract cellFromXY
+#' @importFrom stats rnorm runif
 #' @export
 rand_walk <- function(x = 0, y = 0, step_size = 1, sigma = NULL, theta = NULL,
-                      random_length = FALSE, sdm = NULL,
+                      random_length = FALSE, sdm = NULL, sdm_vec = NULL,
                       attractive_areas = TRUE) {
 
   n <- length(x)
@@ -43,11 +48,7 @@ rand_walk <- function(x = 0, y = 0, step_size = 1, sigma = NULL, theta = NULL,
   }
 
   # Generate step sizes
-  if (random_length) {
-    this_step <- runif(n, max = step_size)
-  } else {
-    this_step <- step_size
-  }
+  this_step <- if (random_length) runif(n, max = step_size) else step_size
 
   x_new <- x + this_step * cos(theta_new)
   y_new <- y + this_step * sin(theta_new)
@@ -56,19 +57,26 @@ rand_walk <- function(x = 0, y = 0, step_size = 1, sigma = NULL, theta = NULL,
     return(cbind(x_new, y_new))
   }
 
-  # Identify invalid moves: outside raster bounds or (if attractive_areas)
-  # moves to a worse SDM cell. Re-draw only the rejected rows iteratively.
+  # Fast SDM lookup: use pre-extracted vector + cellFromXY when available,
+  # otherwise fall back to terra::extract (e.g. when called externally).
+  .sdm_lookup <- function(xy_mat) {
+    if (!is.null(sdm_vec)) {
+      sdm_vec[terra::cellFromXY(sdm, xy_mat)]
+    } else {
+      terra::extract(sdm, xy_mat)[, 1]
+    }
+  }
+
   new_mat  <- cbind(x_new, y_new)
   orig_mat <- cbind(x, y)
 
-  new_vals  <- terra::extract(sdm, new_mat)[, 1]
-  outside   <- is.na(new_vals)
+  new_vals <- .sdm_lookup(new_mat)
+  outside  <- is.na(new_vals)
 
   if (attractive_areas) {
-    orig_vals <- terra::extract(sdm, orig_mat)[, 1]
+    orig_vals <- .sdm_lookup(orig_mat)
     orig_vals[is.na(orig_vals)] <- 0
-    new_vals_safe <- ifelse(is.na(new_vals), -Inf, new_vals)
-    reject <- outside | (orig_vals > new_vals_safe)
+    reject <- outside | (orig_vals > ifelse(is.na(new_vals), -Inf, new_vals))
   } else {
     reject <- outside
   }
@@ -77,8 +85,8 @@ rand_walk <- function(x = 0, y = 0, step_size = 1, sigma = NULL, theta = NULL,
   max_iter <- 100L
   iter     <- 0L
   while (any(reject) && iter < max_iter) {
-    iter  <- iter + 1L
-    nr    <- sum(reject)
+    iter <- iter + 1L
+    nr   <- sum(reject)
 
     if (is.null(sigma)) {
       theta_r <- 2 * pi * runif(nr)
@@ -91,14 +99,13 @@ rand_walk <- function(x = 0, y = 0, step_size = 1, sigma = NULL, theta = NULL,
     new_mat[reject, 1] <- orig_mat[reject, 1] + step_r * cos(theta_r)
     new_mat[reject, 2] <- orig_mat[reject, 2] + step_r * sin(theta_r)
 
-    new_v   <- terra::extract(sdm, new_mat[reject, , drop = FALSE])[, 1]
-    out_r   <- is.na(new_v)
+    new_v  <- .sdm_lookup(new_mat[reject, , drop = FALSE])
+    out_r  <- is.na(new_v)
 
     if (attractive_areas) {
-      orig_v    <- terra::extract(sdm, orig_mat[reject, , drop = FALSE])[, 1]
+      orig_v <- .sdm_lookup(orig_mat[reject, , drop = FALSE])
       orig_v[is.na(orig_v)] <- 0
-      new_v_s   <- ifelse(is.na(new_v), -Inf, new_v)
-      reject[reject] <- out_r | (orig_v > new_v_s)
+      reject[reject] <- out_r | (orig_v > ifelse(is.na(new_v), -Inf, new_v))
     } else {
       reject[reject] <- out_r
     }

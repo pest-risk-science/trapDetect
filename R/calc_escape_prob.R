@@ -15,11 +15,16 @@ NULL
 #'
 #' @description
 #' The main function of the `trapDetect` package.  This function is a wrapper to
-#' call `sim_spread()` if necessary and `p_detect_one()` multiple times.
+#' call `sim_spread()` if necessary and `p_detect_one()` multiple times (recommended).
 #'
 #' @details
 #' This function generates multiple simulations of a population of individuals
 #' spreading through a given sdm (if supplied).
+#'
+#' Parallelism is supported via the `future` backend. Before calling this
+#' function, set a parallel plan with e.g.
+#' `future::plan(future::multisession(workers = 4))`.  Works on Windows, Linux,
+#' and macOS.  Without a plan, execution is sequential (the default).
 #'
 #' @inherit sim_spread
 #' @inherit p_detect_one
@@ -50,157 +55,136 @@ NULL
 #'                       `num_replications` of first time-point a pest was
 #'                       detected for each replication. If no pest deteted,
 #'                       element of vector is returned as 0.}
+#'
+#' @importFrom furrr future_map furrr_options
 #' @export
-# Calls:
-###	p_detect_one()
-# Args:
-###	sim --- simulation object generated using sim_spread()
-###	surv_locs --- locations of detection devices
-### g0 -- detection probability at distance zero
-### lam -- lambda for Manoukis detection function
-### sig --  standard deviation of detection
-###	det_func --- detection function of choice for surveillance
-# Returns:
-###	mean P(Detect at least one) = 1 - P(Detect none) by day of simulation
-### Calculate probability of detections daily over list of simulations and bind
-
-calc_escape_prob <- function(init_dat=NULL,
-                             surv_locs=NULL,
-                             sdm=NULL,
-                             N_seed=1,
+calc_escape_prob <- function(init_dat = NULL,
+                             surv_locs = NULL,
+                             sdm = NULL,
+                             N_seed = 1,
                              min_surv_locs = 9,
                              num_replications = 2,
-                             rand.walk=TRUE,
-                             step_size_os=100,
-                             step_size_ad=100,
-                             Time=10,
-                             K=1000,
-                             age_mu=1,
-                             offspr_mu=0,
-                             bbox=c(-800,-800,800,800),
-                             cell_res=10,
-                             sdm_og=0,
-                             p_alpha=1,
-                             p_beta=1,
-                             allow_leave=FALSE,
-                             attractive_areas=FALSE,
-                             survive_prob=FALSE,
-                             crw=FALSE,
-                             sigma=NULL,
-                             theta=NULL,
-                             random_length=FALSE,
-                             PLOT.IT=FALSE,
+                             rand.walk = TRUE,
+                             step_size_os = 100,
+                             step_size_ad = 100,
+                             Time = 10,
+                             K = 1000,
+                             age_mu = 1,
+                             offspr_mu = 0,
+                             bbox = c(-800, -800, 800, 800),
+                             cell_res = 10,
+                             sdm_og = 0,
+                             p_alpha = 1,
+                             p_beta = 1,
+                             allow_leave = FALSE,
+                             attractive_areas = FALSE,
+                             survive_prob = FALSE,
+                             crw = FALSE,
+                             sigma = NULL,
+                             theta = NULL,
+                             random_length = FALSE,
+                             PLOT.IT = FALSE,
                              g0 = 1.0,
-                             lam=1/50,
+                             lam = 1/50,
                              sig = 1,
-                             det_func="Manouk",
-                             use_manouk_error=FALSE,
-                             get_first_detect=FALSE,
-                             run_surveil=FALSE,
-                             return_sim=FALSE,
-                             return_all_prob=FALSE,...) {
+                             det_func = "Manouk",
+                             use_manouk_error = FALSE,
+                             get_first_detect = FALSE,
+                             run_surveil = FALSE,
+                             return_sim = FALSE,
+                             return_all_prob = FALSE, ...) {
 
-
-  if(is.null(surv_locs)) {
-    if(!is.null(sdm)) {
+  if (is.null(surv_locs)) {
+    if (!is.null(sdm)) {
       stop("Error: Please supply survey locations for this raster")
     }
-    print("Warning: generating survey and raster...")
-    if(is.null(init_dat)) {
-
-      surv_locs <- expand.grid(seq(bbox[1],bbox[3],
-                                   length=sqrt(min_surv_locs)),
-                               seq(bbox[2],bbox[4],
-                                   length=sqrt(min_surv_locs)))
+    message("Warning: generating survey and raster...")
+    if (is.null(init_dat)) {
+      surv_locs <- expand.grid(seq(bbox[1], bbox[3], length = sqrt(min_surv_locs)),
+                               seq(bbox[2], bbox[4], length = sqrt(min_surv_locs)))
     } else {
-      surv_locs <- expand.grid(seq(sim$sdm@extent[1], sim$sdm@extent[2],
-                                   length=sqrt(min_surv_locs)),
-                               seq(sim$sdm@extent[3], sim$sdm@extent[4],
-                                   length=sqrt(min_surv_locs)))
+      sdm_ext   <- terra::ext(sdm)
+      surv_locs <- expand.grid(seq(sdm_ext[1], sdm_ext[2], length = sqrt(min_surv_locs)),
+                               seq(sdm_ext[3], sdm_ext[4], length = sqrt(min_surv_locs)))
     }
-    names(surv_locs) <- c("x","y")
+    names(surv_locs) <- c("x", "y")
   }
 
-  if(is.null(init_dat)) {
-    print("No initial data detected, generating random simulations")
-  }
-  sim <- replicate(num_replications,
-                   sim_spread(init_dat=init_dat,
-                              N_seed=N_seed,
-                              rand.walk=rand.walk,
-                              step_size_os=step_size_os,
-                              step_size_ad=step_size_ad,
-                              Time=Time,
-                              K=K,
-                              age_mu=age_mu,
-                              offspr_mu=offspr_mu,
-                              bbox=bbox,
-                              cell_res=cell_res,
-                              sdm=sdm,
-                              sdm_og=sdm_og,
-                              p_alpha=p_alpha,
-                              p_beta=p_beta,
-                              allow_leave=allow_leave,
-                              crw=crw,
-                              sigma=sigma,
-                              theta=theta,
-                              random_length=random_length,
-                              attractive_areas=attractive_areas,
-                              survive_prob=survive_prob,
-                              PLOT.IT=PLOT.IT),
-                   simplify = FALSE)
-
-
-  p_res_list <- lapply(sim,
-                       function(x) {
-                         p_detect_one(sim=x,
-                                      surv_locs=surv_locs,
-                                      g0=g0,
-                                      lam=lam,
-                                      sig=sig,
-                                      det_func=det_func,
-                                      use_manouk_error=use_manouk_error,
-                                      run_surveil = TRUE)
-                       })
-  res <- do.call("rbind",lapply(p_res_list,function(x)x[['p_cum_out']]))
-
-  # Get first detection?
-  if(get_first_detect) { ##TODO ADD THIS
-    tmp1 <- lapply(p_res_list,function(x) x[['surv_res']])
-    tmp2 <- lapply(tmp1,function(x)lapply(x,function(xx)nrow(xx[['pos_trap_nos']])))
-    first_detect <- apply(do.call("rbind",lapply(tmp2,unlist)),1,
-                          function(x){
-                            ind_val <- which(x>0)
-                            if(length(ind_val)==0) {return_val <- 0}
-                            if(length(ind_val)>0) {return_val <- min(ind_val)}
-                            return_val
-                          }
-    )
+  if (is.null(init_dat)) {
+    message("No initial data detected, generating random simulations")
   }
 
+  # Each replication: run sim_spread then p_detect_one in one worker call.
+  # furrr::future_map is cross-platform (Windows/Linux/macOS). Workers are
+  # controlled by the caller via future::plan() before calling this function.
+  # Without a plan the default is sequential (no change in behaviour).
+  results <- furrr::future_map(
+    seq_len(num_replications),
+    function(.i) {
+      s <- sim_spread(init_dat       = init_dat,
+                      N_seed         = N_seed,
+                      rand.walk      = rand.walk,
+                      step_size_os   = step_size_os,
+                      step_size_ad   = step_size_ad,
+                      Time           = Time,
+                      K              = K,
+                      age_mu         = age_mu,
+                      offspr_mu      = offspr_mu,
+                      bbox           = bbox,
+                      cell_res       = cell_res,
+                      sdm            = sdm,
+                      sdm_og         = sdm_og,
+                      p_alpha        = p_alpha,
+                      p_beta         = p_beta,
+                      allow_leave    = allow_leave,
+                      crw            = crw,
+                      sigma          = sigma,
+                      theta          = theta,
+                      random_length  = random_length,
+                      attractive_areas = attractive_areas,
+                      survive_prob   = survive_prob,
+                      PLOT.IT        = PLOT.IT)
+      p <- p_detect_one(sim             = s,
+                        surv_locs       = surv_locs,
+                        g0              = g0,
+                        lam             = lam,
+                        sig             = sig,
+                        det_func        = det_func,
+                        use_manouk_error = use_manouk_error,
+                        run_surveil     = TRUE)
+      list(sim = s, p_res = p)
+    },
+    .options = furrr::furrr_options(seed = TRUE)
+  )
 
-  # Calculate means over simulations
-  res_sum <- apply(res,2,mean)
+  sim        <- lapply(results, `[[`, "sim")
+  p_res_list <- lapply(results, `[[`, "p_res")
 
-  # Return
+  res <- do.call("rbind", lapply(p_res_list, function(x) x[["p_cum_out"]]))
 
-  return_list <- list()
-  return_list$mean_prob = res_sum
-
-  #if(return_all_prob) {
-    return_list$probs = res
-  #}
-
-  if(return_sim) {
-    return_list$sim = sim
+  if (get_first_detect) {
+    tmp1 <- lapply(p_res_list, function(x) x[["surv_res"]])
+    tmp2 <- lapply(tmp1, function(x) lapply(x, function(xx) nrow(xx[["pos_trap_nos"]])))
+    first_detect <- apply(do.call("rbind", lapply(tmp2, unlist)), 1,
+                          function(x) {
+                            ind_val <- which(x > 0)
+                            if (length(ind_val) == 0) 0 else min(ind_val)
+                          })
   }
 
-  if(get_first_detect) {
-    return_list$first_detect = first_detect
+  res_sum <- colMeans(res)
+
+  return_list           <- list()
+  return_list$mean_prob <- res_sum
+  return_list$probs     <- res
+
+  if (return_sim) {
+    return_list$sim <- sim
+  }
+
+  if (get_first_detect) {
+    return_list$first_detect <- first_detect
   }
 
   return(return_list)
-
 }
-
-

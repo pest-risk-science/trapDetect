@@ -35,7 +35,7 @@
 #'                   caught pests up to that point.First element is time point 0
 #'                   and always 0.}
 #'
-#' @importFrom terra rast ext extract cellFromXY ncell values
+#' @importFrom terra rast ext values cellFromXY ncell
 #' @importFrom fields rdist
 #' @importFrom stats rbinom rpois runif
 #' @export
@@ -61,6 +61,10 @@ sim_capture <- function(init_dat = NULL, N_seed = 2, rand.walk = TRUE,
     sdm_ext <- terra::ext(sdm)
     bbox <- c(sdm_ext[1], sdm_ext[3], sdm_ext[2], sdm_ext[4])
   }
+
+  # Pre-extract SDM as a plain R vector and cache cell count
+  sdm_vec  <- terra::values(sdm)[, 1]
+  ncells_n <- terra::ncell(sdm)
 
   # Survey locations
   if (is.null(surv_loc)) {
@@ -92,10 +96,10 @@ sim_capture <- function(init_dat = NULL, N_seed = 2, rand.walk = TRUE,
     dat <- init_dat
   }
 
-  dat$sdm  <- terra::extract(sdm, as.matrix(dat[, c("x", "y")]))[, 1]
-  dat$sdm[is.na(dat$sdm)] <- sdm_og
-
-  dat$dens <- .cell_density(dat[, c("x", "y")], sdm)
+  # Single cellFromXY pass for SDM values and density
+  sv <- .sdm_dens(dat[, c("x", "y")], sdm, sdm_vec, ncells_n)
+  dat$sdm  <- sv$sdm;   dat$sdm[is.na(dat$sdm)]   <- sdm_og
+  dat$dens <- sv$dens
 
   if (survive_prob) {
     dat[, "Fate"] <- rbinom(nrow(dat), 1, dat$sdm)
@@ -106,9 +110,10 @@ sim_capture <- function(init_dat = NULL, N_seed = 2, rand.walk = TRUE,
   dat_all[[1]] <- dat
   captured    <- numeric(Time + 1)
 
-  sigma0 <- if (crw) sigma else NULL
-  theta0 <- if (crw) theta else NULL
-  sdm0   <- if (allow_leave) NULL else sdm
+  sigma0   <- if (crw) sigma else NULL
+  theta0   <- if (crw) theta else NULL
+  sdm0     <- if (allow_leave) NULL else sdm
+  sdm_vec0 <- if (allow_leave) NULL else sdm_vec
 
   # Pre-compute trap location matrix once
   surv_mat <- as.matrix(surv_loc[, c("x", "y")])
@@ -119,18 +124,17 @@ sim_capture <- function(init_dat = NULL, N_seed = 2, rand.walk = TRUE,
     offspring <- gen_offspring(dat, step_size_os, offspr_mu, K = K,
                                sigma = sigma0, theta = theta0,
                                random_length = random_length,
-                               sdm = sdm0)
+                               sdm = sdm0, sdm_vec = sdm_vec0)
     if (nrow(offspring) > 0) {
       offspring$sdm  <- NA
       offspring$dens <- NA
       dat <- rbind(dat, offspring)
     }
 
-    dat$sdm <- terra::extract(sdm, as.matrix(dat[, c("x", "y")]))[, 1]
-    dat$sdm[is.na(dat$sdm)] <- 1
-
-    dat$dens <- .cell_density(dat[, c("x", "y")], sdm)
-    dat$dens[is.na(dat$dens)] <- 0
+    # Single cellFromXY pass for SDM and density
+    sv <- .sdm_dens(dat[, c("x", "y")], sdm, sdm_vec, ncells_n)
+    dat$sdm  <- sv$sdm;   dat$sdm[is.na(dat$sdm)]   <- 1
+    dat$dens <- sv$dens;  dat$dens[is.na(dat$dens)]  <- 0
 
     if (survive_prob) {
       dat[, "Fate"] <- rbinom(nrow(dat), 1, dat$sdm)
@@ -144,7 +148,7 @@ sim_capture <- function(init_dat = NULL, N_seed = 2, rand.walk = TRUE,
                             step_size = step_size_ad,
                             sigma = sigma0, theta = theta0,
                             random_length = random_length,
-                            sdm = sdm0,
+                            sdm = sdm0, sdm_vec = sdm_vec0,
                             attractive_areas = attractive_areas)
       dat$x <- new_locs[, 1]
       dat$y <- new_locs[, 2]
@@ -178,10 +182,10 @@ sim_capture <- function(init_dat = NULL, N_seed = 2, rand.walk = TRUE,
   total_captured <- cumsum(captured)
 
   return(list(
-    dat           = dat_all,
-    sdm           = sdm,
-    surv_loc      = surv_loc,
-    captured      = captured,
+    dat            = dat_all,
+    sdm            = sdm,
+    surv_loc       = surv_loc,
+    captured       = captured,
     total_captured = total_captured
   ))
 }
