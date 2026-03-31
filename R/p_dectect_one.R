@@ -26,77 +26,71 @@ NULL
 #' \item{`p_cum_out`}{The probability of detecting at least one individual.}
 #' \item{`surv_res`}{A list showing the positive traps for each individual.}
 #' \item{`surv_pts`}{A data frame containing the locations of the traps.}
-#' \item{`sdm`}{A raster containing the sdm of the simulation.}
+#' \item{`sdm`}{A SpatRaster containing the sdm of the simulation.}
+#'
+#' @importFrom fields rdist
+#' @importFrom stats rbinom
 #' @export
-p_detect_one <- function(sim=NULL, surv_locs=NULL,
-                         g0=1.0, lam=1/10, sig=1,
-                         det_func="Manouk", use_manouk_error=FALSE,
-                         run_surveil=FALSE) {
+p_detect_one <- function(sim = NULL, surv_locs = NULL,
+                         g0 = 1.0, lam = 1/10, sig = 1,
+                         det_func = "Manouk", use_manouk_error = FALSE,
+                         run_surveil = FALSE) {
 
-  # Return Errors
-  if(is.null(sim)) {
+  if (is.null(sim)) {
     stop("Error: Please supply pest simulation")
   }
-  if(is.null(surv_locs)) {
+  if (is.null(surv_locs)) {
     stop("Error: Please supply surveillance locations")
   }
 
-  dat <- sim[["dat"]]
-  p_non_detect <- numeric()
+  dat         <- sim[["dat"]]
+  p_non_detect <- numeric(length(dat))
+  surv_mat    <- as.matrix(surv_locs[, c("x", "y")])
 
-  if(run_surveil) {
-    surv_out <- list()
+  if (run_surveil) {
+    surv_out <- vector("list", length(dat))
   }
 
-  for (i in 1:length(dat)) {	#i=1	i= i+1
+  for (i in seq_along(dat)) {
 
-    # Grab point data for pest
-    pest_locs <- dat[[i]][,c('x','y')]
+    pest_locs <- as.matrix(dat[[i]][, c("x", "y")])
 
-    # Pairwise distances (pwd) between critters and surveillance devices
-    pwd_pest_surv <- rdist(pest_locs, surv_locs[,c('x','y')])
+    pwd_pest_surv <- rdist(pest_locs, surv_mat)
 
-    # Calculate probabilities of detection for all pairwise distances
-    if(det_func=="HalfNorm") {
-      pwd_probs <- p_halfnorm(d=pwd_pest_surv, g0=g0, sig=sig)
-    }
-    if(det_func=="Manouk") {
-      pwd_probs <- p_manouk(d=pwd_pest_surv, g0=g0, lam=lam)
+    if (det_func == "HalfNorm") {
+      pwd_probs <- p_halfnorm(d = pwd_pest_surv, g0 = g0, sig = sig)
+    } else {
+      pwd_probs <- p_manouk(d = pwd_pest_surv, g0 = g0, lam = lam)
     }
 
-    # Calculate probabilities of non-detection in all traps
-    pwd_probs_bar <- 1 - pwd_probs
+    pwd_probs_bar       <- 1 - pwd_probs
+    p_indiv_non_detect  <- rowProds(pwd_probs_bar)
+    p_non_detect[i]     <- prod(p_indiv_non_detect)
 
-    # Calculate probabilities of non-detection for individual pests
-    p_indiv_non_detect <- rowProds(pwd_probs_bar)
-
-    # Calculate probability of non-detection of all pests
-    p_non_detect[i] <- prod(p_indiv_non_detect)
-
-    if(use_manouk_error) {
+    if (use_manouk_error) {
       p_non_detect[i] <- mean(p_indiv_non_detect)
     }
 
-    # Run surveillance?
-    if(run_surveil) {
-      surv_detect <- apply(pwd_probs,c(1,2), function(x) rbinom(1,1,x))
-      trap_detect <- apply(surv_detect,2,sum)
-      pos_trap_nos <- surv_locs[which(trap_detect>0),]
-      surv_out[[i]] <- list(pos_trap_nos=pos_trap_nos,dat=dat[[i]])
+    if (run_surveil) {
+      # Vectorized Bernoulli draws
+      surv_detect  <- matrix(rbinom(length(pwd_probs), 1L, pwd_probs),
+                              nrow = nrow(pwd_probs))
+      trap_detect  <- colSums(surv_detect)
+      pos_trap_nos <- surv_locs[which(trap_detect > 0), ]
+      surv_out[[i]] <- list(pos_trap_nos = pos_trap_nos, dat = dat[[i]])
     }
   }
 
-  # Calculate cumulative p ...
-  p_cum_out <- 1 - sapply(1:length(p_non_detect), function(i) prod(p_non_detect[1:i]))
+  p_cum_out <- 1 - sapply(seq_along(p_non_detect),
+                           function(i) prod(p_non_detect[seq_len(i)]))
 
-  # Returning
-  if(run_surveil) {
-    return(
-      list(p_cum_out=p_cum_out,
-           surv_res=surv_out,
-           surv_pts=surv_locs,
-           sdm=sim$sdm
-      ))
+  if (run_surveil) {
+    return(list(
+      p_cum_out = p_cum_out,
+      surv_res  = surv_out,
+      surv_pts  = surv_locs,
+      sdm       = sim$sdm
+    ))
   } else {
     return(p_cum_out)
   }

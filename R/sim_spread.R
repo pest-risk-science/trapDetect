@@ -24,7 +24,8 @@
 #'   distribution.
 #' @param bbox a vector of length 4 of the extent if `sdm` is not given.
 #' @param cell_res resolution of the raster if `sdm` not given.
-#' @param sdm a raster of an sdm with cells between 0 and 1.  Default is `NULL`.
+#' @param sdm a SpatRaster (terra) of an sdm with cells between 0 and 1.
+#'   Default is `NULL`.
 #' @param sdm_og value of sdm off the grid.  If zero, then individuals die off
 #'   grid.
 #' @param p_alpha alpha parameter for Beta distribution for survival probability
@@ -52,152 +53,132 @@
 #'              frame contains columns for the location of individuals (x, y),
 #'              the survival (Fate), age at specified time step (Age), sdm
 #'              value (sdm), and density (dens).}
-#' \item{`sdm`}{A raster containing the sdm of the simulation.}
+#' \item{`sdm`}{A SpatRaster containing the sdm of the simulation.}
 #'
+#' @importFrom terra rast ext extract cellFromXY ncell
+#' @importFrom animation ani.pause
+#' @importFrom stats rbinom rpois runif
 #' @export
-sim_spread <- function(init_dat=NULL, N_seed=2, rand.walk=FALSE,
-                      step_size_os=100, step_size_ad=50, Time=10, K=1000,
-                      age_mu=1, offspr_mu=1, bbox=c(0,0,1608,1608),
-                      cell_res=10, sdm=NULL, sdm_og=0, p_alpha=1,
-                      p_beta=1, allow_leave=FALSE, crw=FALSE,
-                      sigma=NULL, theta=NULL, random_length=FALSE,
-                      attractive_areas=FALSE, survive_prob=FALSE,
-                      PLOT.IT=TRUE, ...) {
+sim_spread <- function(init_dat = NULL, N_seed = 2, rand.walk = FALSE,
+                       step_size_os = 100, step_size_ad = 50, Time = 10, K = 1000,
+                       age_mu = 1, offspr_mu = 1, bbox = c(0, 0, 1608, 1608),
+                       cell_res = 10, sdm = NULL, sdm_og = 0, p_alpha = 1,
+                       p_beta = 1, allow_leave = FALSE, crw = FALSE,
+                       sigma = NULL, theta = NULL, random_length = FALSE,
+                       attractive_areas = FALSE, survive_prob = FALSE,
+                       PLOT.IT = TRUE, ...) {
 
-  if(is.null(sdm)) {
-    # Create sdm assuming all suitable if unknown
-    sdm <- raster(xmn=bbox[1], xmx=bbox[3], ymn=bbox[2],ymx=bbox[4],
-                  resolution=c(cell_res,cell_res))
-    sdm[] <- 1
+  if (is.null(sdm)) {
+    sdm <- terra::rast(xmin = bbox[1], xmax = bbox[3],
+                       ymin = bbox[2], ymax = bbox[4],
+                       resolution = c(cell_res, cell_res))
+    terra::values(sdm) <- 1
   } else {
-    # Redefine bounding box on the basis of sdm supplied
-    sdm_ext <- extent(sdm)
-    bbox <- c(sdm_ext[1],sdm_ext[3],sdm_ext[2],sdm_ext[4])
+    sdm_ext <- terra::ext(sdm)
+    bbox <- c(sdm_ext[1], sdm_ext[3], sdm_ext[2], sdm_ext[4])
   }
 
-  # Initialize population if initial population unknown
-  if(is.null(init_dat)) {
-    dat <- data.frame(x=runif(N_seed,bbox[1],bbox[3]),
-                      y=runif(N_seed,bbox[2],bbox[4]),
-                      Fate=rep(1,N_seed),
-                      Age=rpois(N_seed,age_mu))
+  # Initialize population if not supplied
+  if (is.null(init_dat)) {
+    dat <- data.frame(x    = runif(N_seed, bbox[1], bbox[3]),
+                      y    = runif(N_seed, bbox[2], bbox[4]),
+                      Fate = rep(1, N_seed),
+                      Age  = rpois(N_seed, age_mu))
     row.names(dat) <- NULL
   } else {
     dat <- init_dat
   }
-  if(PLOT.IT) {
-    plot(sdm)
-    with(dat,points(x, y, pch=16,
-                    xlim=c(bbox[1],bbox[3]),
-                    ylim=c(bbox[2],bbox[4]),
-                    col='red'))
-  }
-  # Extract sdm values at introduction locations
-  dat$sdm <- raster::extract(sdm,dat[,c("x","y")])
 
-  # Choose off-grid sdm values
+  if (PLOT.IT) {
+    plot(sdm)
+    with(dat, points(x, y, pch = 16,
+                     xlim = c(bbox[1], bbox[3]),
+                     ylim = c(bbox[2], bbox[4]),
+                     col  = "red"))
+  }
+
+  # Extract sdm values at introduction locations
+  dat$sdm <- terra::extract(sdm, as.matrix(dat[, c("x", "y")]))[, 1]
   dat$sdm[is.na(dat$sdm)] <- sdm_og
 
-  # Sum populations by raster cell
-  dens <- rasterize(dat[,c('x','y')], sdm, fun=function(x,...) length(x))
+  # Fast density: count individuals per raster cell
+  dat$dens <- .cell_density(dat[, c("x", "y")], sdm)
 
-  # Calculate density where critter lives and add to data.frame
-  dat$dens <- raster::extract(dens,dat[,c("x","y")])
-
-  # Apply survival/mortality based on sdm values
-  if(survive_prob) {
-    dat[,"Fate"] <- rbinom(nrow(dat),1,dat$sdm)
-    # Choose survivors
-    dat <- dat[dat$Fate==1,]
+  if (survive_prob) {
+    dat[, "Fate"] <- rbinom(nrow(dat), 1, dat$sdm)
+    dat <- dat[dat$Fate == 1, ]
   }
 
-  # List for populating
-  dat_all <- list()
+  dat_all    <- list()
   dat_all[[1]] <- dat
 
-  # Additional things outside loop
-  if(crw) {
-    sigma0 <- sigma
-    theta0 <- theta
-  } else {
-    sigma0 <- NULL
-    theta0 <- NULL
-  }
-  if(allow_leave) {
-    sdm0 <- NULL
-  } else {
-    sdm0 <- sdm
-  }
+  sigma0 <- if (crw) sigma else NULL
+  theta0 <- if (crw) theta else NULL
+  sdm0   <- if (allow_leave) NULL else sdm
 
-  # Iterate
   t <- 1
-  while (t <= Time & nrow(dat)>0) {
+  while (t <= Time && nrow(dat) > 0) {
 
-    # Generate offspring from survivors
-    offspring <- gen_offspring(dat, step_size_os, offspr_mu, K=K,
-                               sigma = sigma0, theta=theta0,
+    offspring <- gen_offspring(dat, step_size_os, offspr_mu, K = K,
+                               sigma = sigma0, theta = theta0,
                                random_length = random_length,
-                               sdm=sdm0)
-    if(nrow(offspring)>0) {
-      # Add sdm & dens to enable binding
-      offspring$sdm <- NA
+                               sdm = sdm0)
+    if (nrow(offspring) > 0) {
+      offspring$sdm  <- NA
       offspring$dens <- NA
-      dat <- rbind(dat,offspring)
+      dat <- rbind(dat, offspring)
     }
 
     # Extract sdm values
-    dat$sdm <- raster::extract(sdm,dat[,c("x","y")])
-
-    #if(sum(is.na(dat$sdm))==length(dat$sdm)) {break}
-
-    # Replaces NAs with 1 (u survive outside of the grid)
+    dat$sdm <- terra::extract(sdm, as.matrix(dat[, c("x", "y")]))[, 1]
     dat$sdm[is.na(dat$sdm)] <- 1
 
-    # Calculate density
-    dens <- rasterize(dat[,c('x','y')], sdm, fun=function(x,...) length(x))
-    dat$dens <- raster::extract(dens,dat[,c("x","y")])
-    # Assume no density-dependence outside of the grid
+    # Fast density via cell index lookup
+    dat$dens <- .cell_density(dat[, c("x", "y")], sdm)
     dat$dens[is.na(dat$dens)] <- 0
 
-    # Apply mortality based on sdm
-    if(survive_prob) {
-      dat[,"Fate"] <- rbinom(nrow(dat),1,dat$sdm)
-
-      # Choose survivors
-      dat <- dat[dat$Fate==1,]
+    if (survive_prob) {
+      dat[, "Fate"] <- rbinom(nrow(dat), 1, dat$sdm)
+      dat <- dat[dat$Fate == 1, ]
     }
 
-    # Update survivor age
-    dat$Age <- dat$Age+1
+    dat$Age <- dat$Age + 1
 
-    # Undertake random walk if required
-    if(rand.walk) {
-       dat[,c("x","y")] <- t(apply(dat[,c("x","y")], 1,
-                                   function(x) rand_walk(x=x[1],
-                                                         y=x[2],
-                                                         step_size_ad,
-                                                         sigma=sigma0,
-                                                         theta=theta0,
-                                                         random_length=random_length,
-                                                         sdm=sdm0,
-                                                         attractive_areas=attractive_areas)))
+    if (rand.walk && nrow(dat) > 0) {
+      new_locs <- rand_walk(x = dat$x, y = dat$y,
+                            step_size = step_size_ad,
+                            sigma = sigma0, theta = theta0,
+                            random_length = random_length,
+                            sdm = sdm0,
+                            attractive_areas = attractive_areas)
+      dat$x <- new_locs[, 1]
+      dat$y <- new_locs[, 2]
     }
+
     row.names(dat) <- NULL
-    # Update plot
-    if(PLOT.IT) {
+
+    if (PLOT.IT) {
       plot(sdm)
-      with(dat,points(x, y, pch=16,
-                      xlim=c(bbox[1],bbox[3]),
-                      ylim=c(bbox[2],bbox[4]),
-                      col='blue'))
+      with(dat, points(x, y, pch = 16,
+                       xlim = c(bbox[1], bbox[3]),
+                       ylim = c(bbox[2], bbox[4]),
+                       col  = "blue"))
       ani.pause(0.1)
     }
-    # Save details to list
-    dat_all[[t+1]] <- dat
+
+    dat_all[[t + 1]] <- dat
     t <- t + 1
   }
-  return(list(
-    dat=dat_all,
-    sdm=sdm
-  ))
+
+  return(list(dat = dat_all, sdm = sdm))
+}
+
+
+# Internal helper: fast per-individual density via cell index counting.
+# Replaces the slow rasterize() + extract() pair.
+#' @keywords internal
+.cell_density <- function(xy, sdm) {
+  cells  <- terra::cellFromXY(sdm, as.matrix(xy))
+  counts <- tabulate(cells, nbins = terra::ncell(sdm))
+  counts[cells]
 }

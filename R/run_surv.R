@@ -15,8 +15,8 @@
 #' The value of the Half Normal detection function.
 #'
 #' @export
-p_halfnorm <- function(d, g0=0.7, sig=1) {
-  g0*exp(-d^2/(2*sig^2))
+p_halfnorm <- function(d, g0 = 0.7, sig = 1) {
+  g0 * exp(-d^2 / (2 * sig^2))
 }
 
 
@@ -41,8 +41,8 @@ p_halfnorm <- function(d, g0=0.7, sig=1) {
 #' Landscape. Sci Rep 4, 7015 (2014). https://doi.org/10.1038/srep07015
 #'
 #' @export
-p_manouk <- function(d, g0=1.0,lam=1/10) {
-  2*g0/(exp(lam*d)+exp(-lam*d))
+p_manouk <- function(d, g0 = 1.0, lam = 1/10) {
+  2 * g0 / (exp(lam * d) + exp(-lam * d))
 }
 
 #' Run Surveillance
@@ -66,48 +66,42 @@ p_manouk <- function(d, g0=1.0,lam=1/10) {
 #' @return
 #' \item{`surv_res`}{A list showing the positive traps for each individual.}
 #' \item{`surv_pts`}{A data frame containing the locations of the traps.}
-#' \item{`sdm`}{A raster containing the sdm of the simulation.}
+#' \item{`sdm`}{A SpatRaster containing the sdm of the simulation.}
+#'
+#' @importFrom fields rdist
+#' @importFrom stats rbinom
 #' @export
-run_surv <- function(sim=NULL, surv_pts=NULL, g0=0.5,
-                     sig=1, lam=1/10, det_func="Manouk") {
+run_surv <- function(sim = NULL, surv_pts = NULL, g0 = 0.5,
+                     sig = 1, lam = 1/10, det_func = "Manouk") {
 
-  # List to record surveillance data
   surv_out <- list()
-  dat <- sim[["dat"]]
+  dat      <- sim[["dat"]]
+  surv_mat <- as.matrix(surv_pts[, c("x", "y")])
 
-  # For all time steps (slow loop, use lapply())
-  for (i in 1:length(dat)) {
-    # Grab point data
-    sim_pts <- dat[[i]][,c('x','y')]
+  for (i in seq_along(dat)) {
+    sim_pts <- as.matrix(dat[[i]][, c("x", "y")])
 
-    # Pairwise distances (pwd) between critters and surveillance devices
-    pwd_spp_surv <- rdist(sim_pts,surv_pts[,c('x','y')])
+    pwd_spp_surv <- rdist(sim_pts, surv_mat)
 
-    # Calculate probabilities of detection for all pairwise distances
-    if(det_func=="HalfNorm") {
-      pwd_probs <- apply(pwd_spp_surv, c(1,2),
-                         function(x) p_halfnorm(d=x, g0=g0, sig=sig))
-    }
-    if(det_func=="Manouk") {
-      pwd_probs <- apply(pwd_spp_surv, c(1,2),
-                         function(x) p_manouk(d=x, g0=g0, lam=lam))
+    if (det_func == "HalfNorm") {
+      pwd_probs <- p_halfnorm(d = pwd_spp_surv, g0 = g0, sig = sig)
+    } else {
+      pwd_probs <- p_manouk(d = pwd_spp_surv, g0 = g0, lam = lam)
     }
 
-    # Sample detections randomly (ignoring competition for critters)
-    surv_detect <- apply(pwd_probs,c(1,2), function(x) rbinom(1,1,x))
+    # Vectorized Bernoulli draws
+    surv_detect <- matrix(rbinom(length(pwd_probs), 1L, pwd_probs),
+                          nrow = nrow(pwd_probs))
 
-    # Sum detections by trap
-    trap_detect <- apply(surv_detect,2,sum)
+    trap_detect  <- colSums(surv_detect)
+    pos_trap_nos <- surv_pts[which(trap_detect > 0), ]
 
-    # Which traps caught something
-    pos_trap_nos <- surv_pts[which(trap_detect>0),]
-
-    # Save
-    surv_out[[i]] <- list(pos_trap_nos=pos_trap_nos,dat=dat[[i]])
+    surv_out[[i]] <- list(pos_trap_nos = pos_trap_nos, dat = dat[[i]])
   }
-  return(
-    list(surv_res=surv_out,
-         surv_pts=surv_pts,
-         sdm=sim$sdm
-    ))
+
+  return(list(
+    surv_res = surv_out,
+    surv_pts = surv_pts,
+    sdm      = sim$sdm
+  ))
 }

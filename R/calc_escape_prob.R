@@ -4,13 +4,10 @@ NULL
 #' @importFrom animation ani.pause
 NULL
 
-#' @importFrom raster extent extract rasterize raster
+#' @importFrom terra ext extract rast values
 NULL
 
 #' @importFrom fields rdist
-NULL
-
-#' @import raster
 NULL
 
 
