@@ -1,3 +1,7 @@
+#' @importFrom matrixStats rowProds
+NULL
+
+
 #' Probability to detect one individual
 #'
 #' @description
@@ -64,7 +68,7 @@ p_detect_one <- function(sim=NULL, surv_locs=NULL,
     pwd_probs_bar <- 1 - pwd_probs
 
     # Calculate probabilities of non-detection for individual pests
-    p_indiv_non_detect <- apply(pwd_probs_bar, 1, prod)
+    p_indiv_non_detect <- rowProds(pwd_probs_bar)
 
     # Calculate probability of non-detection of all pests
     p_non_detect[i] <- prod(p_indiv_non_detect)
