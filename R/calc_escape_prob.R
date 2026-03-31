@@ -21,16 +21,20 @@ NULL
 #' This function generates multiple simulations of a population of individuals
 #' spreading through a given sdm (if supplied).
 #'
-#' Parallelism is supported via the `future` backend. Before calling this
-#' function, set a parallel plan with e.g.
-#' `future::plan(future::multisession(workers = 4))`.  Works on Windows, Linux,
-#' and macOS.  Without a plan, execution is sequential (the default).
+#' Parallelism is opt-in via `parallel = TRUE`, which uses the `furrr` package
+#' and the `future` backend.  Before setting `parallel = TRUE`, choose a plan
+#' with e.g. `future::plan(future::multisession(workers = 4))`.  Works on
+#' Windows, Linux, and macOS.  By default (`parallel = FALSE`) replications run
+#' sequentially with no external dependencies.
 #'
 #' @inherit sim_spread
 #' @inherit p_detect_one
 #' @param min_surv_locs the minimum number of trap locations to put in the sdm.
 #' @param num_replications the number of times to replicate the simulation
 #'   spread.
+#' @param parallel logical. If `TRUE`, replications are run in parallel using
+#'   `furrr::future_map()` (requires the `furrr` package and a
+#'   `future::plan()` set by the caller).  Default `FALSE` (sequential).
 #' @param get_first_detect logical. If `TRUE` returns a vector length
 #'   `num_replications` of first time-point a pest was detected.  If no pest
 #'   detected in replication, value returned is 0. Returned as `first_detect`.
@@ -56,7 +60,6 @@ NULL
 #'                       detected for each replication. If no pest deteted,
 #'                       element of vector is returned as 0.}
 #'
-#' @importFrom furrr future_map furrr_options
 #' @export
 calc_escape_prob <- function(init_dat = NULL,
                              surv_locs = NULL,
@@ -92,7 +95,8 @@ calc_escape_prob <- function(init_dat = NULL,
                              get_first_detect = FALSE,
                              run_surveil = FALSE,
                              return_sim = FALSE,
-                             return_all_prob = FALSE, ...) {
+                             return_all_prob = FALSE,
+                             parallel = FALSE, ...) {
 
   if (is.null(surv_locs)) {
     if (!is.null(sdm)) {
@@ -114,48 +118,68 @@ calc_escape_prob <- function(init_dat = NULL,
     message("No initial data detected, generating random simulations")
   }
 
-  # Each replication: run sim_spread then p_detect_one in one worker call.
-  # furrr::future_map is cross-platform (Windows/Linux/macOS). Workers are
-  # controlled by the caller via future::plan() before calling this function.
-  # Without a plan the default is sequential (no change in behaviour).
-  results <- furrr::future_map(
-    seq_len(num_replications),
-    function(.i) {
-      s <- sim_spread(init_dat       = init_dat,
-                      N_seed         = N_seed,
-                      rand.walk      = rand.walk,
-                      step_size_os   = step_size_os,
-                      step_size_ad   = step_size_ad,
-                      Time           = Time,
-                      K              = K,
-                      age_mu         = age_mu,
-                      offspr_mu      = offspr_mu,
-                      bbox           = bbox,
-                      cell_res       = cell_res,
-                      sdm            = sdm,
-                      sdm_og         = sdm_og,
-                      p_alpha        = p_alpha,
-                      p_beta         = p_beta,
-                      allow_leave    = allow_leave,
-                      crw            = crw,
-                      sigma          = sigma,
-                      theta          = theta,
-                      random_length  = random_length,
-                      attractive_areas = attractive_areas,
-                      survive_prob   = survive_prob,
-                      PLOT.IT        = PLOT.IT)
-      p <- p_detect_one(sim             = s,
-                        surv_locs       = surv_locs,
-                        g0              = g0,
-                        lam             = lam,
-                        sig             = sig,
-                        det_func        = det_func,
-                        use_manouk_error = use_manouk_error,
-                        run_surveil     = TRUE)
-      list(sim = s, p_res = p)
-    },
-    .options = furrr::furrr_options(seed = TRUE)
-  )
+  # Inner worker: one replication of sim_spread + p_detect_one.
+  # sdm_local allows the parallel path to supply an unwrapped SpatRaster
+  # independently of the outer-scope sdm (which can't be serialised).
+  .worker <- function(.i, sdm_local = sdm) {
+    s <- sim_spread(init_dat         = init_dat,
+                    N_seed           = N_seed,
+                    rand.walk        = rand.walk,
+                    step_size_os     = step_size_os,
+                    step_size_ad     = step_size_ad,
+                    Time             = Time,
+                    K                = K,
+                    age_mu           = age_mu,
+                    offspr_mu        = offspr_mu,
+                    bbox             = bbox,
+                    cell_res         = cell_res,
+                    sdm              = sdm_local,
+                    sdm_og           = sdm_og,
+                    p_alpha          = p_alpha,
+                    p_beta           = p_beta,
+                    allow_leave      = allow_leave,
+                    crw              = crw,
+                    sigma            = sigma,
+                    theta            = theta,
+                    random_length    = random_length,
+                    attractive_areas = attractive_areas,
+                    survive_prob     = survive_prob,
+                    PLOT.IT          = PLOT.IT)
+    p <- p_detect_one(sim              = s,
+                      surv_locs        = surv_locs,
+                      g0               = g0,
+                      lam              = lam,
+                      sig              = sig,
+                      det_func         = det_func,
+                      use_manouk_error = use_manouk_error,
+                      run_surveil      = TRUE)
+    list(sim = s, p_res = p)
+  }
+
+  # Dispatch: sequential by default; parallel when parallel = TRUE (opt-in).
+  if (parallel) {
+    if (!requireNamespace("furrr", quietly = TRUE)) {
+      stop(
+        "Package 'furrr' is required for parallel = TRUE. ",
+        "Install it with: install.packages(c('furrr', 'future'))"
+      )
+    }
+    # terra SpatRasters hold external C++ pointers and cannot be serialised
+    # across multisession workers.  wrap()/unwrap() converts to/from a
+    # serialisable PackedSpatRaster so workers can reconstruct the raster.
+    sdm_packed <- if (!is.null(sdm)) terra::wrap(sdm) else NULL
+    results <- furrr::future_map(
+      seq_len(num_replications),
+      function(.i, sdm_packed) {
+        sdm_local <- if (!is.null(sdm_packed)) terra::unwrap(sdm_packed) else NULL
+        .worker(.i, sdm_local = sdm_local)
+      },
+      sdm_packed = sdm_packed,
+      .options = furrr::furrr_options(seed = TRUE)
+    )
+  } else {
+    results <- lapply(seq_len(num_replications), .worker)
+  }
 
   sim        <- lapply(results, `[[`, "sim")
   p_res_list <- lapply(results, `[[`, "p_res")

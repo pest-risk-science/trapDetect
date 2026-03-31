@@ -38,7 +38,7 @@ returned:
 \item{\code{p_cum_out}}{The probability of detecting at least one individual.}
 \item{\code{surv_res}}{A list showing the positive traps for each individual.}
 \item{\code{surv_pts}}{A data frame containing the locations of the traps.}
-\item{\code{sdm}}{A raster containing the sdm of the simulation.}
+\item{\code{sdm}}{A SpatRaster containing the sdm of the simulation.}
 }
 \description{
 A function that calculates the probability of detecting at least one

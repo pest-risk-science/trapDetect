@@ -40,6 +40,7 @@ calc_escape_prob(
   run_surveil = FALSE,
   return_sim = FALSE,
   return_all_prob = FALSE,
+  parallel = FALSE,
   ...
 )
 }
@@ -51,7 +52,8 @@ Age of the initial locations of the population to simulate a spread. If
 
 \item{surv_locs}{a data frame containing the locations of the traps.}
 
-\item{sdm}{a raster of an sdm with cells between 0 and 1.  Default is \code{NULL}.}
+\item{sdm}{a SpatRaster (terra) of an sdm with cells between 0 and 1.
+Default is \code{NULL}.}
 
 \item{N_seed}{integer of number of individuals to spread if \code{init_dat} is \code{NULL}}
 
@@ -136,6 +138,10 @@ as \code{sim}. Default \code{FALSE}.}
 matrix is returned as \code{probs}.  Each row is one simulation spread. Default
 \code{FALSE}.}
 
+\item{parallel}{logical. If \code{TRUE}, replications are run in parallel using
+\code{furrr::future_map()} (requires the \code{furrr} package and a
+\code{future::plan()} set by the caller).  Default \code{FALSE} (sequential).}
+
 \item{...}{additional arguments to be passed to helper functions.}
 }
 \value{
@@ -154,9 +160,15 @@ element of vector is returned as 0.}
 }
 \description{
 The main function of the \code{trapDetect} package.  This function is a wrapper to
-call \code{sim_spread()} if necessary and \code{p_detect_one()} multiple times.
+call \code{sim_spread()} if necessary and \code{p_detect_one()} multiple times (recommended).
 }
 \details{
 This function generates multiple simulations of a population of individuals
 spreading through a given sdm (if supplied).
+
+Parallelism is opt-in via \code{parallel = TRUE}, which uses the \code{furrr} package
+and the \code{future} backend.  Before setting \code{parallel = TRUE}, choose a plan
+with e.g. \code{future::plan(future::multisession(workers = 4))}.  Works on
+Windows, Linux, and macOS.  By default (\code{parallel = FALSE}) replications run
+sequentially with no external dependencies.
 }

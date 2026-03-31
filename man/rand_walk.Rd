@@ -12,36 +12,45 @@ rand_walk(
   theta = NULL,
   random_length = FALSE,
   sdm = NULL,
+  sdm_vec = NULL,
   attractive_areas = TRUE
 )
 }
 \arguments{
-\item{x, y}{the location (x,y) of the initial individual.}
+\item{x, y}{the location(s) in x and y. Either scalars (single individual)
+or numeric vectors (multiple individuals processed simultaneously).}
 
 \item{step_size}{step size for dispersal distances of individual.}
 
 \item{sigma}{variance of random walk if specified. Default \code{NULL}.}
 
-\item{theta}{angle of random walk if specified.  Default \code{NULL}.}
+\item{theta}{angle(s) of random walk if specified. Default \code{NULL}.}
 
 \item{random_length}{logical. If \code{TRUE}, random walk allows random length up
 to \code{step_size}. Default \code{FALSE}.}
 
-\item{sdm}{a raster of an sdm with cells between 0 and 1.  Default is \code{NULL}.}
+\item{sdm}{a SpatRaster (terra) of an sdm with cells between 0 and 1.
+Default is \code{NULL}.}
+
+\item{sdm_vec}{optional pre-extracted numeric vector of SDM cell values
+(i.e. \code{terra::values(sdm)[, 1]}). When supplied, boundary checks use
+fast cell-index lookups instead of \code{terra::extract()}, saving repeated
+raster overhead inside tight loops.}
 
 \item{attractive_areas}{logical. If \code{TRUE}, specify areas in sdm to be more
 attractive and prevent individuals leaving once they enter area as defined
 by raster values.}
 }
 \value{
-A vector of length 2, the first element corresponding to the location in the
-x direction, the second in the y direction.
+A two-column matrix of new (x, y) locations, one row per individual.
 }
 \description{
-Function to determine new location of an individual based on a random walk
+Function to determine new locations of individuals based on a random walk
 process.
 }
 \details{
-This function takes in a location of an individual and generates a vector
-for the new location of an individual based on a random walk.
+This function takes a matrix of individual locations and generates a matrix
+of new locations based on a random walk. It accepts either a single (x, y)
+pair (backward-compatible) or a two-column matrix of locations for fully
+vectorized operation over many individuals at once.
 }

@@ -60,7 +60,8 @@ distribution.}
 
 \item{cell_res}{resolution of the raster if \code{sdm} not given.}
 
-\item{sdm}{a raster of an sdm with cells between 0 and 1.  Default is \code{NULL}.}
+\item{sdm}{a SpatRaster (terra) of an sdm with cells between 0 and 1.
+Default is \code{NULL}.}
 
 \item{sdm_og}{value of sdm off the grid.  If zero, then individuals die off
 grid.}
@@ -100,7 +101,7 @@ corresponds to a time step in the simulated spread.  Each data
 frame contains columns for the location of individuals (x, y),
 the survival (Fate), age at specified time step (Age), sdm
 value (sdm), and density (dens).}
-\item{\code{sdm}}{A raster containing the sdm of the simulation.}
+\item{\code{sdm}}{A SpatRaster containing the sdm of the simulation.}
 }
 \description{
 This function simulates the spread in an sdm.

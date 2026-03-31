@@ -13,6 +13,7 @@ gen_offspring(
   theta = NULL,
   random_length = FALSE,
   sdm = NULL,
+  sdm_vec = NULL,
   ...
 )
 }
@@ -35,7 +36,11 @@ per individual per time step using a Poisson distribution.}
 \item{random_length}{logical. If \code{TRUE}, random walk allows random length up
 to \code{step_size_os}. Default \code{FALSE}.}
 
-\item{sdm}{ta raster of an sdm with cells between 0 and 1.  Default is \code{NULL}.}
+\item{sdm}{a SpatRaster (terra) of an sdm with cells between 0 and 1.
+Default is \code{NULL}.}
+
+\item{sdm_vec}{optional pre-extracted numeric vector of SDM cell values
+passed through to \code{rand_walk()} for fast boundary checks.}
 
 \item{...}{additional arguments to be passed to other functions.}
 }

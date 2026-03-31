@@ -28,7 +28,7 @@ calls \code{p_halfnorm()}.  See help from those functions for details.}
 \value{
 \item{\code{surv_res}}{A list showing the positive traps for each individual.}
 \item{\code{surv_pts}}{A data frame containing the locations of the traps.}
-\item{\code{sdm}}{A raster containing the sdm of the simulation.}
+\item{\code{sdm}}{A SpatRaster containing the sdm of the simulation.}
 }
 \description{
 Helper function to run surveillance. Note this function is not currently

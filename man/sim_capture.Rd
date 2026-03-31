@@ -87,7 +87,8 @@ distribution.}
 
 \item{cell_res}{resolution of the raster if \code{sdm} not given.}
 
-\item{sdm}{a raster of an sdm with cells between 0 and 1.  Default is \code{NULL}.}
+\item{sdm}{a SpatRaster (terra) of an sdm with cells between 0 and 1.
+Default is \code{NULL}.}
 
 \item{sdm_og}{value of sdm off the grid.  If zero, then individuals die off
 grid.}
@@ -124,7 +125,7 @@ corresponds to a time step in the simulated spread.  Each data
 frame contains columns for the location of individuals (x, y),
 the survival (Fate), age at specified time step (Age), sdm
 value (sdm), and density (dens).}
-\item{sdm}{A raster containing the sdm of the simulation.}
+\item{sdm}{A SpatRaster containing the sdm of the simulation.}
 \item{surv_loc}{A data frame containing the locations of the traps.}
 \item{captured}{A vector of length Time+1 of the number of captured pests
 during that time step. First element is time point 0 and
@@ -140,5 +141,6 @@ This function simulates spread and captures of an outbreak.
 Takes in an sdm, initial data, and potential survey locations.  If no sdm,
 data, or survey locations are specified, generates a grid of monitoring
 devices in a square uniform block.  User must specify the number of traps
-if no survey locations given.
+if no survey locations given. It is recommended to run this function multiple
+times.
 }
