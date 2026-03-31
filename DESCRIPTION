@@ -21,8 +21,9 @@ Description: The 'trapDetect' package is a flexible framework to simulate the
 Imports: 
     animation, 
     raster, 
-    fields
-License: GPL (>= 3) + file LICENSE
+    fields,
+    matrixStats
+License: GPL (>= 3)
 Encoding: UTF-8
 LazyData: true
 Roxygen: list(markdown = TRUE)

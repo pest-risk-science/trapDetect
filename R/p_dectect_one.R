@@ -1,3 +1,7 @@
+#' @importFrom matrixStats rowProds
+NULL
+
+
 #' Probability to detect one individual
 #'
 #' @description
@@ -37,7 +41,7 @@ p_detect_one <- function(sim=NULL, surv_locs=NULL,
     stop("Error: Please supply surveillance locations")
   }
 
-  dat=sim[["dat"]]
+  dat <- sim[["dat"]]
   p_non_detect <- numeric()
 
   if(run_surveil) {
@@ -54,19 +58,17 @@ p_detect_one <- function(sim=NULL, surv_locs=NULL,
 
     # Calculate probabilities of detection for all pairwise distances
     if(det_func=="HalfNorm") {
-      pwd_probs <- apply(pwd_pest_surv, c(1,2),
-                         function(x) p_halfnorm(d=x, g0=g0, sig=sig))
+      pwd_probs <- p_halfnorm(d=pwd_pest_surv, g0=g0, sig=sig)
     }
     if(det_func=="Manouk") {
-      pwd_probs <- apply(pwd_pest_surv, c(1,2),
-                         function(x) p_manouk(d=x, g0=g0, lam=lam))
+      pwd_probs <- p_manouk(d=pwd_pest_surv, g0=g0, lam=lam)
     }
 
     # Calculate probabilities of non-detection in all traps
-    pwd_probs_bar <- apply(pwd_probs, c(1,2), function(x) {1-x})
+    pwd_probs_bar <- 1 - pwd_probs
 
     # Calculate probabilities of non-detection for individual pests
-    p_indiv_non_detect <- apply(pwd_probs_bar, 1, prod)
+    p_indiv_non_detect <- rowProds(pwd_probs_bar)
 
     # Calculate probability of non-detection of all pests
     p_non_detect[i] <- prod(p_indiv_non_detect)
