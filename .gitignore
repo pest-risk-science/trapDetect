@@ -4,3 +4,5 @@
 .httr-oauth
 .DS_Store
 .positai
+
+site_detect_shiny/
